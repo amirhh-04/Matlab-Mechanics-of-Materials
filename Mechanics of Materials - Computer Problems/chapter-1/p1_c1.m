@@ -8,10 +8,10 @@ if ~ (customary_unit == "US") && ~ (customary_unit == "SI"); disp("Please enter 
 if ~ isnumeric(tElements) || ~ isscalar(tElements) || ~(tElements > 0); disp("Please enter a number!"); return; end;
 if customary_unit == "SI"
     unit_si = true;
-    unitData = struct('diameter', 'm', 'load', 'N');
+    unitData = struct('diameter', 'm', 'load', 'N', 'area', 'm²', 'stress', 'MPa');
 else
     unit_si = false;
-    unitData = struct('diameter', 'in', 'load', 'kips');
+    unitData = struct('diameter', 'in', 'load', 'kips', 'area', 'in²', 'stress', 'ksi');
 end
 
 data = cell(tElements, 1);
@@ -31,11 +31,8 @@ for c = 1:tElements
 end
 
 for c = 1:tElements
-    if unit_si == true
-        fprintf('\n ------ Element %d ------\n   Force: %.2f (N)\n   Area: %.4e (m²)\n   Average Stress: %.4f (MPa)\n', c, data{c}.load, data{c}.area, pascalsToMegapascals(data{c}.averageStress));
-    else
-        fprintf('\n ------ Element %d ------\n   Force: %.2f (kips)\n   Area: %.4e (in²)\n   Average Stress: %.4f (ksi)\n', c, data{c}.load, data{c}.area, data{c}.averageStress);
-    end
+    averageStress = (unit_si * pascalsToMegapascals(data{c}.averageStress) + (1 - unit_si) * data{c}.averageStress);
+    fprintf('\n ------ Element %d ------\n   Force: %.2f (%s)\n   Area: %.4e (%s)\n   Average Stress: %.4f (%s)\n', c, data{c}.load, unitData.load, data{c}.area, unitData.area, averageStress, unitData.stress);
 end
 
 function megapascals = pascalsToMegapascals(pascals)

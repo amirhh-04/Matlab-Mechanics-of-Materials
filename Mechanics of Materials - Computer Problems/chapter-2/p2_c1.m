@@ -8,10 +8,10 @@ if ~ (customary_unit == "US") && ~ (customary_unit == "SI"); disp("Please enter 
 if ~ isnumeric(tElements) || ~ isscalar(tElements) || ~(tElements > 0); disp("Please enter a number!"); return; end;
 if customary_unit == "SI"
     unit_si = true;
-    unitData = struct('length', 'm', 'diameter', 'm', 'elas_ticity', 'Pa', 'load_applied', 'N');
+    unitData = struct('length', 'm', 'diameter', 'm', 'elas_ticity', 'Pa', 'load_applied', 'N', 'stress', 'Pa', 'delta', 'mm');
 else
     unit_si = false;
-    unitData = struct('length', 'in', 'diameter', 'in', 'elas_ticity', 'psi', 'load_applied', 'lb');
+    unitData = struct('length', 'in', 'diameter', 'in', 'elas_ticity', 'psi', 'load_applied', 'lb', 'stress', 'ksi', 'delta', 'in');
 end
 
 data = cell(tElements, 1);
@@ -26,7 +26,6 @@ for c = 1:tElements
 
     cs_area = (pi / 4) * (diameter)^2;
 
-
     delta = (load_applied * length) / (cs_area * elas_ticity);
     delta_point = delta_point + delta;
     stress = load_applied / cs_area;
@@ -35,11 +34,11 @@ for c = 1:tElements
 end
 
 for c = 1:tElements
-    if unit_si == true
-        fprintf('\n ------ Element %d ------ \n   Stress: %f (Pa) \n   Delta: %f (mm) \n   Delta Point: %f (mm) \n', c, pascalsToMegapascals(data{c}.stress), metersToMillimeters(data{c}.delta), metersToMillimeters(data{c}.delta_point));
-    else
-        fprintf('\n ------ Element %d ------ \n   Stress: %f (ksi) \n   Delta: %f (in) \n   Delta Point: %f (in) \n', c, psiToKsi(data{c}.stress), data{c}.delta, data{c}.delta_point);
-    end
+    stress = (unit_si * pascalsToMegapascals(data{c}.stress) + (1 - unit_si) * psiToKsi(data{c}.stress));
+    delta = (unit_si * metersToMillimeters(data{c}.delta) + (1 - unit_si) * data{c}.delta);
+    delta_point = (unit_si * metersToMillimeters(data{c}.delta_point) + (1 - unit_si) * data{c}.delta_point);
+
+    fprintf('\n ------ Element %d ------ \n   Stress: %f (%s) \n   Delta: %f (%s) \n   Delta Point: %f (%s) \n', c, stress, unitData.stress, delta, unitData.delta, delta_point, unitData.delta);
 end
 
 function millimeters = metersToMillimeters(meters)
