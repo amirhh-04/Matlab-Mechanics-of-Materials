@@ -7,11 +7,9 @@ tElements = input("Total Elements : ");
 if ~ (customary_unit == "US") && ~ (customary_unit == "SI"); disp("Please enter the correct customary units!"); return; end;
 if ~ isnumeric(tElements) || ~ isscalar(tElements) || ~(tElements > 0); disp("Please enter a number!"); return; end;
 if customary_unit == "SI"
-    unit_si = true;
-    unitData = struct('length', 'm', 'diameter', 'm', 'elas_ticity', 'Pa', 'load_applied', 'N', 'stress', 'Pa', 'delta', 'mm');
+    unitData = struct('si', true, 'length', 'm', 'diameter', 'm', 'elas_ticity', 'Pa', 'load_applied', 'N', 'stress', 'Pa', 'delta', 'mm');
 else
-    unit_si = false;
-    unitData = struct('length', 'in', 'diameter', 'in', 'elas_ticity', 'psi', 'load_applied', 'lb', 'stress', 'ksi', 'delta', 'in');
+    unitData = struct('si', false, 'length', 'in', 'diameter', 'in', 'elas_ticity', 'psi', 'load_applied', 'lb', 'stress', 'ksi', 'delta', 'in');
 end
 
 data = cell(tElements, 1);
@@ -34,10 +32,10 @@ for c = 1:tElements
 end
 
 for c = 1:tElements
+    unit_si = unitData.si;
     stress = (unit_si * pascalsToMegapascals(data{c}.stress) + (1 - unit_si) * psiToKsi(data{c}.stress));
     delta = (unit_si * metersToMillimeters(data{c}.delta) + (1 - unit_si) * data{c}.delta);
     delta_point = (unit_si * metersToMillimeters(data{c}.delta_point) + (1 - unit_si) * data{c}.delta_point);
-
     fprintf('\n ------ Element %d ------ \n   Stress: %f (%s) \n   Delta: %f (%s) \n   Delta Point: %f (%s) \n', c, stress, unitData.stress, delta, unitData.delta, delta_point, unitData.delta);
 end
 
