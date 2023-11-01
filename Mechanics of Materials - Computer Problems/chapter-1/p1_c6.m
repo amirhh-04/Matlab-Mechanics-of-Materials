@@ -49,4 +49,17 @@ for c = 1:3
     data{c, 1}.area = area;
     data{c, 1}.f = f;
     data{c, 1}.p = p;
-end
+
+    fprintf('\n ------------------------\n   A: %.4e (m²)\n   F: %.4e (N)\n   P: %.3e (N)', area, f, p);
+
+    if c == 3
+        [val, min_idx] = min([data{1, 1}.p, data{2, 1}.p, data{3, 1}.p]);
+        if min_idx == 3
+            fprintf('\n ------------------------\n   P = %.4e ,Stress Is Critical In Links.\n', val);
+        elseif min_idx == 1
+            fprintf('\n ------------------------\n   P = %.4e ,Stress Is Critical In Pin A.\n', val);
+        else
+            fprintf('\n ------------------------\n   P = %.4e ,Stress Is Critical In Pins B and D.\n', val);
+        end
+    end
+end 
