@@ -55,11 +55,13 @@ for c = 1:3
     if c == 3
         [val, min_idx] = min([data{1, 1}.p, data{2, 1}.p, data{3, 1}.p]);
         if min_idx == 3
-            fprintf('\n ------------------------\n   P = %.4e ,Stress Is Critical In Links.\n', val);
+            mess = "Stress Is Critical In Links";
         elseif min_idx == 1
-            fprintf('\n ------------------------\n   P = %.4e ,Stress Is Critical In Pin A.\n', val);
+            mess = "Stress Is Critical In Pin A";
         else
-            fprintf('\n ------------------------\n   P = %.4e ,Stress Is Critical In Pins B and D.\n', val);
+            mess = "Stress Is Critical In Pins B and D";
         end
+
+        fprintf('\n ------------------------\n   P = %.4e , %s.\n', val, mess);
     end
 end 
