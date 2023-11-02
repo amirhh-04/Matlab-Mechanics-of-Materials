@@ -1,12 +1,12 @@
 %%%%%%%%% P2-C6 %%%%%%%%%%
 clc; clear;
 
-n_nums = input("Enter n [=> 1,4, ...]: ");
-
-P = 6000;
-L = .4;
-c = .020;
-E = 70e9;
+%n_nums = input("Enter n [=> 1,4, ...]: ");
+n_nums = [6, 12, 60];
+P = 1000;
+L = 10;
+c = 1;
+E = 200e9;
 
 data = cell(length(n_nums), 1);
 delta = 0;
@@ -16,10 +16,10 @@ for c = 1:length(n_nums)
     n = n_nums(c);
     for i = 1:n
         len = (i + 0.5)*(L / n);
-        r = (2*c) - c*(len - L);
-        area = pi * r^2;
+        r = (2*c) - c*(len / L);
+        area = pi * (r^2);
 
-        delta = delta + P * (L / n) / (area / E);
+        delta = delta + P * (L / n) / (area * E);
     end
 
     percent = 100*(delta - delta_exact) / delta_exact;
