@@ -1,4 +1,7 @@
 <h1 align='center'><center><img src="https://api.amirhh-04.ir/languages/matlab.png" alt="FIREAC logo" height="20" width="20"></center>   Engineering Computations Repository   <center><img src="https://api.amirhh-04.ir/languages/matlab.png" alt="Matlab logo" height="20" width="20"></center></a></h1>
+<h5 align='center'>Support: <a href='https://t.me/amirhh_04'>Telegram</a> - <a href='https://amirhh-04.ir/'>Website</a></h5>
+
+---
 
 This repository serves as a comprehensive hub for various engineering computational problems, featuring MATLAB solutions and educational content. It is organized into four main directories:
 
