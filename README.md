@@ -9,7 +9,7 @@ This repository serves as a comprehensive hub for various engineering computatio
 
 # 1. Mechanics of Materials - Computer Problems
 - This section includes MATLAB solutions for computer problems related to the study of mechanics of materials.
-- Solutions are derived from the 7th edition of the "Mechanics of Materials" book by Ferdinand P. Beer, E. Russell Johnston, Jr., John T. Dewolf, David F. Mazurek.
+- Includes answers to computer questions from the 7th edition of the Mechanics of Materials book by Ferdinand P. Beer, E. Russell Johnston, Jr., John T. Dewolf, David F. Mazurek.
 
 |  Chapter 1  |  Chapter 2  |  Chapter 3  |  Chapter 4  |  Chapter 5  |  Chapter 6  | 
 |-------------|-------------|-------------|-------------|-------------|-------------|
@@ -27,9 +27,10 @@ This repository serves as a comprehensive hub for various engineering computatio
 - This directory contains additional educational MATLAB code covering fundamental concepts such as conditions, loops, and basic computations.
 - Ideal for those seeking to enhance their MATLAB programming skills for engineering applications.
 
-# 4. Statics - Computer Problems
-- Explore MATLAB solutions for computer problems associated with the study of statics.
-- This section provides computational solutions for static equilibrium problems, forces, and moments.
+# 4. Dynamics - Computer Problems
+- Explore MATLAB solutions for computer problems associated with the study of Dynamics.
+- Includes answers to computer questions from the 8th edition of the Mechanics of Materials book by Ferdinand P. Beer, E. Russell Johnston, Jr., John T. Dewolf, David F. Mazurek.
+
 
 |  Chapter 1  |  Chapter 2  |  Chapter 3  |  Chapter 4  |  Chapter 5  |  Chapter 6  | 
 |-------------|-------------|-------------|-------------|-------------|-------------|
