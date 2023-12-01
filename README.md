@@ -13,7 +13,7 @@ This repository serves as a comprehensive hub for various engineering computatio
 
 |  Chapter 1  |  Chapter 2  |  Chapter 3  |  Chapter 4  |  Chapter 5  |  Chapter 6  | 
 |-------------|-------------|-------------|-------------|-------------|-------------|
-|`p1_c1`  `p1_c4`  `p1_c6`|`p2_c1`  `p2_c2(nc)`  `p2_c3`  `p2_c5`  `p2_c6`|`p3_c1(nc)`  `p3_c2(nc)`| ---- | ---- | ---- |
+|`p1_c1`  `p1_c4`  `p1_c6`|`p2_c1`  `p2_c2`  `p2_c3`  `p2_c5`  `p2_c6`|`p3_c1`  `p3_c2(nc)`| ---- | ---- | ---- |
 
 # 2. Numerical Calculations - Analysis
 - Here, you'll find MATLAB code and examples related to numerical calculations and analysis.
