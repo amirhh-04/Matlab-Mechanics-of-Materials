@@ -1,60 +1,152 @@
 clc; clear;
 
+data = cell(1, 1);
 
-
-
-
-% ورودی‌ها
 nodeCount = input('Enter the number of nodes: ');
-elementCount = input('Enter the number of elements: ');
-
-% اطلاعات گره‌ها
-nodes = zeros(nodeCount, 2);
+data{1, 1}.nodes = zeros(nodeCount, 2);
 for i = 1:nodeCount
-    nodes(i, :) = input(['Enter coordinates for node ', num2str(i), ' [x y]: ']);
+    e_l = num2str(i);
+    data{1, 1}.nodes(i, :) = input(['Enter coordinates for node (' e_l ') [x y]: ']);
 end
 
-% اتصالات بین گره‌ها
-connections = input('Enter connections between nodes as a matrix (e.g., [1 2; 1 3; 3 2]): ');
-
-% نیروها
-forceNodesCount = input('Enter the number of nodes with forces: ');
-forces = zeros(forceNodesCount, 2);
-forceNodes = zeros(forceNodesCount, 1);
-
-for i = 1:forceNodesCount
-    forceNodes(i) = input(['Enter the index of the node with force ', num2str(i), ': ']);
-    forces(i, :) = input(['Enter forces applied to node ', num2str(forceNodes(i)), ' [Fx Fy]: ']);
-end
-
-% تعیین گره‌های تکیه‌گاه
-supportNodes = zeros(nodeCount, 1);
-supportNodeIndices = input('Enter the indices of support nodes (0 for none): ');
-
-for i = 1:length(supportNodeIndices)
-    supportNodes(supportNodeIndices(i)) = 1;
-end
-
-% محاسبات و نتایج
-disp('Calculations and Results:');
+elementCount = input('Enter the number of elements: ');
+data{1, 1}.elements = zeros(elementCount, 4);
 for i = 1:elementCount
-    % محاسبه طول المان
-    lengths(i) = norm(nodes(connections(i, 1), :) - nodes(connections(i, 2), :));
+    e_l = num2str(i);
+    data{1, 1}.elements(i, :) = input(['Enter Data for Element (' e_l ') [node1 node2 A E]: ']);
+end
 
-    % محاسبه مساحت هر المان
-    areas(i) = input(['Enter the cross-sectional area of element ', num2str(i), ': ']);
+forceNodesCount = input('Enter the number of nodes with forces: ');
+data{1, 1}.forces = zeros(forceNodesCount, 3);
+for i = 1:forceNodesCount
+    e_l = num2str(i);
+    data{1, 1}.forces(i, :) = input(['Enter Data for forces (' e_l ') [nodeNumber F nodeAngle]: ']);
+end
 
-    % محاسبه تنش
-    force1 = forces(forceNodes == connections(i, 1), :);
-    force2 = forces(forceNodes == connections(i, 2), :);
-    force = force1 - force2;
-    stress = norm(force) / areas(i);
+supportCount = input('Enter the number of support: ');
+data{1, 1}.supports = zeros(supportCount, 3);
+for i = 1:supportCount
+    e_l = num2str(i);
+    data{1, 1}.supports(i, :) = input(['Enter Data for supports (' e_l ') [nodeNumber type(1,2) orien(0,1,2)]: ']);
+end
 
-    % محاسبه کرنش
-    strain = lengths(i) / norm(nodes(connections(i, 1), :) - nodes(connections(i, 2), :));
+data{1, 1}.element_lengths = zeros(elementCount, 1);
+data{1, 1}.element_angles = zeros(elementCount, 1);
+data{1, 1}.k = zeros(1, 1);
 
-    % نمایش نتایج
-    fprintf('Element %d:\n', i);
-    fprintf('Stress: %.2f Pa\n', stress);
-    fprintf('Strain: %.6f\n', strain);
+for i = 1:elementCount
+    n_1 = data{1, 1}.elements(i, 1);
+    n_2 = data{1, 1}.elements(i, 2);
+
+    x_1 = data{1, 1}.nodes(n_1, 1);
+    x_2 = data{1, 1}.nodes(n_2, 1);
+    delta_x = x_2 - x_1;
+
+    y_1 = data{1, 1}.nodes(n_1, 2);
+    y_2 = data{1, 1}.nodes(n_2, 2);
+    delta_y = y_2 - y_1;
+
+    data{1, 1}.element_lengths(i) = sqrt((delta_x^2) +(delta_y^2));
+    data{1, 1}.element_angles(i) = atan2(delta_y, delta_x);
+
+    area = data{1, 1}.elements(i, 3);
+    elas_ticity = data{1, 1}.elements(i, 4);
+
+    s_i_n = sin(data{1, 1}.element_angles(i));
+    c_o_s = cos(data{1, 1}.element_angles(i));
+
+    delta_f_mat = [c_o_s^2 s_i_n*c_o_s -c_o_s^2 -s_i_n*c_o_s;s_i_n*c_o_s s_i_n^2 -s_i_n*c_o_s -s_i_n^2;-c_o_s^2 -s_i_n*c_o_s c_o_s^2 s_i_n*c_o_s;-s_i_n*c_o_s -s_i_n^2 s_i_n*c_o_s s_i_n^2];
+    k{i} = area * elas_ticity / data{1, 1}.element_lengths(i) * delta_f_mat;
+end
+
+k_data = zeros(2 * nodeCount);
+k0_data = k_data;
+
+for i = 1:elementCount
+    n_1 = data{1, 1}.elements(i, 1);
+    n_2 = data{1, 1}.elements(i, 2);
+
+    k0_data(2*n_1-1:2*n_1, 2*n_1-1:2*n_1) = k{i} (1:2, 1:2);
+    k0_data(2*n_1-1:2*n_1, 2*n_2-1:2*n_2) = k{i} (1:2, 3:4);
+
+    k0_data(2*n_2-1:2*n_2, 2*n_1-1:2*n_1) = k{i} (3:4, 1:2);
+    k0_data(2*n_2-1:2*n_2, 2*n_2-1:2*n_2) = k{i} (3:4, 3:4);
+
+
+    k_data = k_data + k0_data;
+    k0_data(:, :) = 0;
+end
+
+force_0 = zeros(2*nodeCount, 1);
+for i = 1:forceNodesCount
+    force_node = data{1, 1}.forces(i, 1);
+    force_len = data{1, 1}.forces(i, 2);
+    force_angle = data{1, 1}.forces(i, 3) / 180 * pi;
+
+    fx = force_len * cos(force_angle);
+    fy = force_len * sin(force_angle);
+
+    force_0(2*force_node-1:2*force_node, 1) = [fx; fy];
+end
+
+cnt = 0;
+for i = 1:supportCount
+    support_node = data{1, 1}.supports(i, 1);
+    support_type = data{1, 1}.supports(i, 2);
+    support_orien = data{1, 1}.supports(i, 3);
+
+    if support_type == 1
+        if support_orien == 1
+            cnt = cnt + 1;
+            uu_zero(cnt) = 2*support_node-1;
+        elseif support_orien == 2
+            cnt = cnt + 1;
+            uu_zero(cnt) = 2*support_node;
+        end
+    elseif support_type == 2
+        cnt = cnt + 2;
+        uu_zero(cnt-1:cnt) = 2*support_node-1:2*support_node;
+    end
+end
+
+kc_data = k_data;
+fc_data = force_0;
+
+kc_data(:, uu_zero) = [];
+kc_data(uu_zero, :) = [];
+
+fc_data(uu_zero, :) = [];
+
+uo_data = kc_data^-1*fc_data;
+
+uu_all = 1:2*nodeCount;
+uu_nonzero = uu_all;
+uu_nonzero(uu_zero) = [];
+
+u_data(uu_all, 1) = 0;
+u_data(uu_nonzero, 1) = uo_data;
+
+force = k_data*u_data;
+
+for i = 1:elementCount
+    s_i_n = sin(data{1, 1}.element_angles(i));
+    c_o_s = cos(data{1, 1}.element_angles(i));
+
+    n_1 = data{1, 1}.elements(i, 1);
+    n_2 = data{1, 1}.elements(i, 2);
+
+    delta = [-c_o_s -s_i_n c_o_s s_i_n] * [u_data(2*n_1-1); u_data(2*n_1); u_data(2*n_2-1); u_data(2*n_2)];
+
+    area = data{1, 1}.elements(i, 3);
+    elas_ticity = data{1, 1}.elements(i, 4);
+
+    p = area * elas_ticity / data{1, 1}.element_lengths(i) * delta;
+
+    element_res(i, 1) = delta;
+    element_res(i, 2) = p;
+    element_res(i, 3) = p/area;
+end
+
+for i = 1:elementCount
+    fprintf('\n  -------------------------------------------\n   Element (%g) ==> Elongation : %g um, Force : %g N,  : %g MPa  ', i, element_res(i, 1) * 1e6, element_res(i, 2), element_res(i, 3) / 1e6);
 end
