@@ -148,6 +148,11 @@ for i = 1:elementCount
 end
 
 for i = 1:elementCount
-    fprintf('\n  -------------------------------------------\n   Element (%g) ==> Elongation: %g um, Force: %g N, Stress: %g MPa', i, element_res(i, 1) * 1e6, element_res(i, 2), element_res(i, 3) / 1e6);
+    elongation = element_res(i, 1) * 1e6;
+    force = element_res(i, 2);
+    stress = element_res(i, 3) / 1e6;
+    strain = element_res(i, 1) / data{1, 1}.element_lengths(i);
+
+    fprintf('\n -------------------- Element (%g) --------------------\n   Elongation: %g (um) \n   Force: %g (N) \n   Stress: %g (MPa) \n   Strain: %g ', i, elongation, force, stress, strain);
 end
-fprintf('\n  -------------------------------------------\n');
+fprintf('\n ------------------------------------------------------\n');
