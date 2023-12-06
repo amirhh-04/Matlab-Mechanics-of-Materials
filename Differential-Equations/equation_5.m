@@ -10,7 +10,7 @@ n_data = input("(N) Data [=> (...)dy]: ");
 derivative_n = diff(n_data, x);
 derivative_m = diff(m_data, y);
 
-if ~(derivative_n == derivative_m); disp('no no no , This is a Shit :/'); return; end;
+if ~(derivative_n == derivative_m); disp('The given differential equation is not exact.'); return; end;
 
 integral_m = int(m_data, x);
 integral_n = int(n_data, y);
