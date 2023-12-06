@@ -148,5 +148,6 @@ for i = 1:elementCount
 end
 
 for i = 1:elementCount
-    fprintf('\n  -------------------------------------------\n   Element (%g) ==> Elongation : %g um, Force : %g N,  : %g MPa  ', i, element_res(i, 1) * 1e6, element_res(i, 2), element_res(i, 3) / 1e6);
+    fprintf('\n  -------------------------------------------\n   Element (%g) ==> Elongation: %g um, Force: %g N, Stress: %g MPa', i, element_res(i, 1) * 1e6, element_res(i, 2), element_res(i, 3) / 1e6);
 end
+fprintf('\n  -------------------------------------------\n');
