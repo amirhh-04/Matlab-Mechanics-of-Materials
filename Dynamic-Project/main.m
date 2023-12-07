@@ -13,14 +13,14 @@ elementCount = input('Enter the number of elements: ');
 data{1, 1}.elements = zeros(elementCount, 4);
 for i = 1:elementCount
     e_l = num2str(i);
-    data{1, 1}.elements(i, :) = input(['Enter Data for Element (' e_l ') [node1 node2 A E]: ']);
+    data{1, 1}.elements(i, :) = input(['Enter Data for Element (' e_l ') [node1 node2 A(m²) E(GPa)]: ']);
 end
 
 forceNodesCount = input('Enter the number of nodes with forces: ');
 data{1, 1}.forces = zeros(forceNodesCount, 3);
 for i = 1:forceNodesCount
     e_l = num2str(i);
-    data{1, 1}.forces(i, :) = input(['Enter Data for forces (' e_l ') [nodeNumber F nodeAngle]: ']);
+    data{1, 1}.forces(i, :) = input(['Enter Data for forces (' e_l ') [nodeNumber F(N) nodeAngle]: ']);
 end
 
 supportCount = input('Enter the number of support: ');
@@ -32,7 +32,6 @@ end
 
 data{1, 1}.element_lengths = zeros(elementCount, 1);
 data{1, 1}.element_angles = zeros(elementCount, 1);
-data{1, 1}.k = zeros(1, 1);
 
 for i = 1:elementCount
     n_1 = data{1, 1}.elements(i, 1);
@@ -148,11 +147,22 @@ for i = 1:elementCount
 end
 
 for i = 1:elementCount
-    elongation = element_res(i, 1) * 1e6;
+    node_first = data{1, 1}.elements(i, 1);
+    node_second = data{1, 1}.elements(i, 2);
+
+    delta_len = meterTomicroMetres(element_res(i, 1));
     force = element_res(i, 2);
-    stress = element_res(i, 3) / 1e6;
+    stress = pascalsToMegapascals(element_res(i, 3));
     strain = element_res(i, 1) / data{1, 1}.element_lengths(i);
 
-    fprintf('\n -------------------- Element (%g) --------------------\n   Elongation: %g (um) \n   Force: %g (N) \n   Stress: %g (MPa) \n   Strain: %g ', i, elongation, force, stress, strain);
+    fprintf('\n -------------------- Element (%g) [n: %g,%g] --------------------\n   Delta L: %g (um) \n   Force: %g (N) \n   Stress: %g (MPa) \n   Strain: %g ', i, node_first, node_second, delta_len, force, stress, strain);
 end
-fprintf('\n ------------------------------------------------------\n');
+fprintf('\n');
+
+function microMetres = meterTomicroMetres(meter)
+    microMetres = meter * 1e6;
+end
+
+function megapascals = pascalsToMegapascals(pascals)
+    megapascals = pascals / 1e6;
+end
