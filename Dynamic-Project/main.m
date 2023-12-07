@@ -10,10 +10,10 @@ for i = 1:nodeCount
 end
 
 elementCount = input('Enter the number of elements: ');
-data{1, 1}.elements = zeros(elementCount, 4);
+data{1, 1}.elements = zeros(elementCount, 5);
 for i = 1:elementCount
     e_l = num2str(i);
-    data{1, 1}.elements(i, :) = input(['Enter Data for Element (' e_l ') [node1 node2 A(m²) E(GPa)]: ']);
+    data{1, 1}.elements(i, :) = input(['Enter Data for Element (' e_l ') [node1 node2 A(m²) E(Pa) yieldStress(Pa)]: ']);
 end
 
 forceNodesCount = input('Enter the number of nodes with forces: ');
@@ -49,13 +49,13 @@ for i = 1:elementCount
     data{1, 1}.element_angles(i) = atan2(delta_y, delta_x);
 
     area = data{1, 1}.elements(i, 3);
-    elas_ticity = data{1, 1}.elements(i, 4);
+    young_modulus = data{1, 1}.elements(i, 4);
 
     s_i_n = sin(data{1, 1}.element_angles(i));
     c_o_s = cos(data{1, 1}.element_angles(i));
 
     delta_f_mat = [c_o_s^2 s_i_n*c_o_s -c_o_s^2 -s_i_n*c_o_s;s_i_n*c_o_s s_i_n^2 -s_i_n*c_o_s -s_i_n^2;-c_o_s^2 -s_i_n*c_o_s c_o_s^2 s_i_n*c_o_s;-s_i_n*c_o_s -s_i_n^2 s_i_n*c_o_s s_i_n^2];
-    k{i} = area * elas_ticity / data{1, 1}.element_lengths(i) * delta_f_mat;
+    k{i} = area * young_modulus / data{1, 1}.element_lengths(i) * delta_f_mat;
 end
 
 k_data = zeros(2 * nodeCount);
@@ -137,9 +137,9 @@ for i = 1:elementCount
     delta = [-c_o_s -s_i_n c_o_s s_i_n] * [u_data(2*n_1-1); u_data(2*n_1); u_data(2*n_2-1); u_data(2*n_2)];
 
     area = data{1, 1}.elements(i, 3);
-    elas_ticity = data{1, 1}.elements(i, 4);
+    young_modulus = data{1, 1}.elements(i, 4);
 
-    p = area * elas_ticity / data{1, 1}.element_lengths(i) * delta;
+    p = area * young_modulus / data{1, 1}.element_lengths(i) * delta;
 
     element_res(i, 1) = delta;
     element_res(i, 2) = p;
@@ -149,13 +149,15 @@ end
 for i = 1:elementCount
     node_first = data{1, 1}.elements(i, 1);
     node_second = data{1, 1}.elements(i, 2);
+    yield_stress = data{1, 1}.elements(i, 5);
 
     delta_len = meterTomicroMetres(element_res(i, 1));
     force = element_res(i, 2);
     stress = pascalsToMegapascals(element_res(i, 3));
     strain = element_res(i, 1) / data{1, 1}.element_lengths(i);
+    stress_utilisation = abs(element_res(i, 3) / yield_stress) * 100;
 
-    fprintf('\n -------------------- Element (%g) [n: %g,%g] --------------------\n   Delta L: %g (um) \n   Force: %g (N) \n   Stress: %g (MPa) \n   Strain: %g ', i, node_first, node_second, delta_len, force, stress, strain);
+    fprintf('\n -------------------- Element (%g) [n: %g,%g] --------------------\n   Delta L: %g (um) \n   Force: %g (N) \n   Stress: %g (MPa) \n   Strain: %g \n   Stress Utilisation: %g%%', i, node_first, node_second, delta_len, force, stress, strain, stress_utilisation);
 end
 fprintf('\n');
 
