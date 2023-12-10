@@ -161,6 +161,39 @@ for i = 1:elementCount
 end
 fprintf('\n');
 
+
+
+nodes = data{1, 1}.nodes;
+elements = data{1, 1}.elements;
+
+figure;
+scatter(nodes(:, 1), nodes(:, 2), 'ro', 'filled');
+hold on;
+
+for i = 1:size(elements, 1)
+    node1 = elements(i, 1);
+    node2 = elements(i, 2);
+    
+    x1 = nodes(node1, 1);
+    y1 = nodes(node1, 2);
+    
+    x2 = nodes(node2, 1);
+    y2 = nodes(node2, 2);
+    
+    line([x1, x2], [y1, y2], 'Color', 'b');
+end
+
+title('STRUCTURE: ');
+grid on;
+
+xMargin = 5;
+yMargin = 5;
+xlim([min(nodes(:, 1)) - xMargin, max(nodes(:, 1)) + xMargin]);
+ylim([min(nodes(:, 2)) - yMargin, max(nodes(:, 2)) + yMargin]);
+
+axis equal;
+
+
 function microMetres = meterTomicroMetres(meter)
     microMetres = meter * 1e6;
 end
