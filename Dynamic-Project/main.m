@@ -1,4 +1,4 @@
-clc; clear;
+clc; clear; close all;
 
 data = cell(1, 1);
 
@@ -155,22 +155,24 @@ for i = 1:elementCount
     force = element_res(i, 2);
     stress = pascalsToMegapascals(element_res(i, 3));
     strain = element_res(i, 1) / data{1, 1}.element_lengths(i);
-    stress_utilisation = abs(element_res(i, 3) / yield_stress) * 100;
+    element_res(i, 4) = abs(element_res(i, 3) / yield_stress) * 100;
+    stress_utilisation = element_res(i, 4);
 
     fprintf('\n -------------------- Element (%g) [n: %g,%g] --------------------\n   Delta L: %g (um) \n   Force: %g (N) \n   Stress: %g (MPa) \n   Strain: %g \n   Stress Utilisation: %g%%', i, node_first, node_second, delta_len, force, stress, strain, stress_utilisation);
 end
 fprintf('\n');
 
-
-
 nodes = data{1, 1}.nodes;
 elements = data{1, 1}.elements;
+supports = data{1, 1}.supports;
 
 figure;
 scatter(nodes(:, 1), nodes(:, 2), 'ro', 'filled');
 hold on;
 
-for i = 1:size(elements, 1)
+for i = 1:elementCount
+    stress_utilisation = element_res(i, 4);
+
     node1 = elements(i, 1);
     node2 = elements(i, 2);
     
@@ -179,20 +181,51 @@ for i = 1:size(elements, 1)
     
     x2 = nodes(node2, 1);
     y2 = nodes(node2, 2);
+
+    broken = false;
+    if stress_utilisation >= 100
+        color = 'r';
+        broken = true;
+    else
+        color = 'b';
+    end
     
-    line([x1, x2], [y1, y2], 'Color', 'b');
+    line([x1, x2], [y1, y2], 'Color', color, 'LineWidth', 3);
+end
+
+for i = 1:size(supports, 1)
+    node = supports(i, 1);
+    support_type = supports(i, 2);
+    support_orien = supports(i, 3);
+    
+    x = nodes(node, 1);
+    y = nodes(node, 2);
+    
+    if support_type == 1
+        color = 'b';
+        h = 0.2;
+        w = h * sqrt(2);
+        x_points = [x-w/2, x, x+w/2];
+        y_points = [y-h/2, y+h/2, y-h/2];
+        patch(x_points, y_points, color, 'EdgeColor', 'none');
+    elseif support_type == 2
+        if support_orien == 1
+            color = 'y';
+        else 
+            color = 'k';
+        end
+        h = 0.2;
+        w = h * sqrt(2);
+        x_points = [x-w/2, x, x+w/2];
+        y_points = [y-h/2, y+h/2, y-h/2];
+        patch(x_points, y_points, color, 'EdgeColor', 'none');
+    end
 end
 
 title('STRUCTURE: ');
 grid on;
 
-xMargin = 5;
-yMargin = 5;
-xlim([min(nodes(:, 1)) - xMargin, max(nodes(:, 1)) + xMargin]);
-ylim([min(nodes(:, 2)) - yMargin, max(nodes(:, 2)) + yMargin]);
-
 axis equal;
-
 
 function microMetres = meterTomicroMetres(meter)
     microMetres = meter * 1e6;
