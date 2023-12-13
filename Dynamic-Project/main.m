@@ -126,6 +126,8 @@ u_data(uu_all, 1) = 0;
 u_data(uu_nonzero, 1) = uo_data;
 
 force = k_data*u_data;
+element_res = cell(elementCount, 1);
+data{1, 1}.newNodesLoc = data{1, 1}.nodes;
 
 for i = 1:elementCount
     s_i_n = sin(data{1, 1}.element_angles(i));
@@ -136,42 +138,56 @@ for i = 1:elementCount
 
     delta = [-c_o_s -s_i_n c_o_s s_i_n] * [u_data(2*n_1-1); u_data(2*n_1); u_data(2*n_2-1); u_data(2*n_2)];
 
+    n1_new_loc_x = u_data(2*n_1-1) * -c_o_s;
+    n1_new_loc_y = u_data(2*n_1) * -s_i_n;
+
+    n2_new_loc_x = u_data(2*n_2-1) * c_o_s;
+    n2_new_loc_y = u_data(2*n_2) * s_i_n;
+
+    data{1, 1}.newNodesLoc(n_1, :) = data{1, 1}.newNodesLoc(n_1, :) + [n1_new_loc_x, n1_new_loc_y];
+    data{1, 1}.newNodesLoc(n_2, :) = data{1, 1}.newNodesLoc(n_2, :) + [n2_new_loc_x, n2_new_loc_y];
+
     area = data{1, 1}.elements(i, 3);
     young_modulus = data{1, 1}.elements(i, 4);
 
     p = area * young_modulus / data{1, 1}.element_lengths(i) * delta;
 
-    element_res(i, 1) = delta;
-    element_res(i, 2) = p;
-    element_res(i, 3) = p/area;
+    element_res{i, 1}.delta_len = delta;
+    element_res{i, 1}.force = p;
+    element_res{i, 1}.stress = p/area;
 end
 
 for i = 1:elementCount
+    el_data = element_res{i, 1};
+
     node_first = data{1, 1}.elements(i, 1);
     node_second = data{1, 1}.elements(i, 2);
     yield_stress = data{1, 1}.elements(i, 5);
+    el_len = data{1, 1}.element_lengths(i);
 
-    delta_len = meterTomicroMetres(element_res(i, 1));
-    force = element_res(i, 2);
-    stress = pascalsToMegapascals(element_res(i, 3));
-    strain = element_res(i, 1) / data{1, 1}.element_lengths(i);
-    element_res(i, 4) = abs(element_res(i, 3) / yield_stress) * 100;
-    stress_utilisation = element_res(i, 4);
+    delta_len = meterTomicroMetres(el_data.delta_len);
+    force = el_data.force;
+    stress = pascalsToMegapascals(el_data.stress);
+    strain = (el_len + el_data.delta_len) / el_len;
+    stress_utilisation = abs(el_data.stress / yield_stress) * 100;
+    element_res{i, 1}.stress_utilisation = stress_utilisation;
+    element_res{i, 1}.strain = strain;
 
     fprintf('\n -------------------- Element (%g) [n: %g,%g] --------------------\n   Delta L: %g (um) \n   Force: %g (N) \n   Stress: %g (MPa) \n   Strain: %g \n   Stress Utilisation: %g%%', i, node_first, node_second, delta_len, force, stress, strain, stress_utilisation);
 end
 fprintf('\n');
 
 nodes = data{1, 1}.nodes;
+new_nodes = data{1, 1}.newNodesLoc;
 elements = data{1, 1}.elements;
 supports = data{1, 1}.supports;
 
 figure;
-scatter(nodes(:, 1), nodes(:, 2), 'ro', 'filled');
+scatter(nodes(:, 1), nodes(:, 2), 120, [0.8500 0.3250 0.0980], 'filled');
 hold on;
 
 for i = 1:elementCount
-    stress_utilisation = element_res(i, 4);
+    stress_utilisation = element_res{i, 1}.stress_utilisation;
 
     node1 = elements(i, 1);
     node2 = elements(i, 2);
@@ -181,15 +197,22 @@ for i = 1:elementCount
     
     x2 = nodes(node2, 1);
     y2 = nodes(node2, 2);
+        
+    new_x1 = new_nodes(node1, 1);
+    new_y1 = new_nodes(node1, 2);
+    
+    new_x2 = new_nodes(node2, 1);
+    new_y2 = new_nodes(node2, 2);
 
     broken = false;
     if stress_utilisation >= 100
-        color = 'r';
+        color = [0.6350 0.0780 0.1840];
         broken = true;
     else
-        color = 'b';
+        color = [0 0.4470 0.7410];
     end
     
+    line([new_x1, new_x2], [new_y1, new_y2], 'Color', "magenta", 'LineWidth', 2);
     line([x1, x2], [y1, y2], 'Color', color, 'LineWidth', 3);
 end
 
