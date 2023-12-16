@@ -108,22 +108,22 @@ for i = 1:supportCount
     end
 end
 
-kc_data = k_data;
-fc_data = force_0;
+k_small_data = k_data;
+forces_data = force_0;
 
-kc_data(:, uu_zero) = [];
-kc_data(uu_zero, :) = [];
+k_small_data(:, uu_zero) = [];
+k_small_data(uu_zero, :) = [];
 
-fc_data(uu_zero, :) = [];
+forces_data(uu_zero, :) = [];
 
-uo_data = kc_data^-1*fc_data;
+u_all_data = (k_small_data^-1) * forces_data;
 
 uu_all = 1:2*nodeCount;
 uu_nonzero = uu_all;
 uu_nonzero(uu_zero) = [];
 
 u_data(uu_all, 1) = 0;
-u_data(uu_nonzero, 1) = uo_data;
+u_data(uu_nonzero, 1) = u_all_data;
 
 force = k_data*u_data;
 element_res = cell(elementCount, 1);
