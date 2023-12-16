@@ -205,7 +205,7 @@ for i = 1:elementCount
     new_y2 = new_nodes(node2, 2);
 
     broken = false;
-    if stress_utilisation >= 100
+    if stress_utilisation > 100
         color = [0.6350 0.0780 0.1840];
         broken = true;
     else
@@ -216,7 +216,7 @@ for i = 1:elementCount
     line([x1, x2], [y1, y2], 'Color', color, 'LineWidth', 3);
 end
 
-for i = 1:size(supports, 1)
+for i = 1:supportCount
     node = supports(i, 1);
     support_type = supports(i, 2);
     support_orien = supports(i, 3);
@@ -247,7 +247,6 @@ end
 
 title('STRUCTURE: ');
 grid on;
-
 axis equal;
 
 function microMetres = meterTomicroMetres(meter)
