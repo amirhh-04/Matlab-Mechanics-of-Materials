@@ -197,7 +197,7 @@ function [delta_len, force, stress, strain, stress_utilisation] = getResultByEle
     delta_len = meterTomicroMetres(el_data.delta_len);
     force = el_data.force;
     stress = pascalsToMegapascals(el_data.stress);
-    strain = (el_len + el_data.delta_len) / el_len;
+    strain = (delta_len) / el_len;
     stress_utilisation = abs(el_data.stress / yield_stress) * 100;
 end
 
