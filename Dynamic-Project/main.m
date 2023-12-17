@@ -106,11 +106,11 @@ for i = 1:elementCount
 
     delta = [-c_o_s -s_i_n c_o_s s_i_n] * [u_data(2*n_1-1); u_data(2*n_1); u_data(2*n_2-1); u_data(2*n_2)];
 
-    n1_new_loc_x = u_data((2 * n_1) - 1) * -c_o_s;
-    n1_new_loc_y = u_data(2 * n_1) * -s_i_n;
+    n1_new_loc_x = u_data((2 * n_1) - 1);
+    n1_new_loc_y = u_data(2 * n_1);
 
-    n2_new_loc_x = u_data((2 * n_2) - 1) * c_o_s;
-    n2_new_loc_y = u_data(2 * n_2) * s_i_n;
+    n2_new_loc_x = u_data((2 * n_2) - 1);
+    n2_new_loc_y = u_data(2 * n_2);
 
     data{1, 1}.newNodesLoc(n_1, :) = data{1, 1}.newNodesLoc(n_1, :) + [n1_new_loc_x, n1_new_loc_y];
     data{1, 1}.newNodesLoc(n_2, :) = data{1, 1}.newNodesLoc(n_2, :) + [n2_new_loc_x, n2_new_loc_y];
