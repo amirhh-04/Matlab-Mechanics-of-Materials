@@ -62,24 +62,24 @@ end
 force_0 = zeros(2*nodeCount, 1);
 for i = 1:forceNodesCount
     [force_node, fx, fy] = getForceInfo(i, data);
-    force_0(2*force_node-1:2*force_node, 1) = [fx; fy];
+    force_0((2 * force_node) - 1:(2 * force_node), 1) = [fx; fy];
 end
 
-cnt = 0;
+counter = 0;
 for i = 1:supportCount
     [support_node, support_type, support_orien] = getSupportInfo(i, data);
 
     if support_type == 1
         if support_orien == 1
-            cnt = cnt + 1;
-            uu_zero(cnt) = 2*support_node-1;
+            counter = counter + 1;
+            uu_zero(counter) = (2 * support_node) - 1;
         elseif support_orien == 2
-            cnt = cnt + 1;
-            uu_zero(cnt) = 2*support_node;
+            counter = counter + 1;
+            uu_zero(counter) = 2 * support_node;
         end
     elseif support_type == 2
-        cnt = cnt + 2;
-        uu_zero(cnt-1:cnt) = 2*support_node-1:2*support_node;
+        counter = counter + 2;
+        uu_zero(counter-1:counter) = (2 * support_node) - 1:(2 * support_node);
     end
 end
 
@@ -89,12 +89,12 @@ k_small_data(:, uu_zero) = [];
 k_small_data(uu_zero, :) = [];
 forces_data(uu_zero, :) = [];
 u_all_data = (k_small_data^-1) * forces_data;
-uu_all = 1:2*nodeCount;
+uu_all = 1:(2 * nodeCount);
 uu_nonzero = uu_all;
 uu_nonzero(uu_zero) = [];
 u_data(uu_all, 1) = 0;
 u_data(uu_nonzero, 1) = u_all_data;
-force = k_data*u_data;
+force = k_data * u_data;
 
 element_res = cell(elementCount, 1);
 data{1, 1}.newNodesLoc = data{1, 1}.nodes;
@@ -106,11 +106,11 @@ for i = 1:elementCount
 
     delta = [-c_o_s -s_i_n c_o_s s_i_n] * [u_data(2*n_1-1); u_data(2*n_1); u_data(2*n_2-1); u_data(2*n_2)];
 
-    n1_new_loc_x = u_data(2*n_1-1) * -c_o_s;
-    n1_new_loc_y = u_data(2*n_1) * -s_i_n;
+    n1_new_loc_x = u_data((2 * n_1) - 1) * -c_o_s;
+    n1_new_loc_y = u_data(2 * n_1) * -s_i_n;
 
-    n2_new_loc_x = u_data(2*n_2-1) * c_o_s;
-    n2_new_loc_y = u_data(2*n_2) * s_i_n;
+    n2_new_loc_x = u_data((2 * n_2) - 1) * c_o_s;
+    n2_new_loc_y = u_data(2 * n_2) * s_i_n;
 
     data{1, 1}.newNodesLoc(n_1, :) = data{1, 1}.newNodesLoc(n_1, :) + [n1_new_loc_x, n1_new_loc_y];
     data{1, 1}.newNodesLoc(n_2, :) = data{1, 1}.newNodesLoc(n_2, :) + [n2_new_loc_x, n2_new_loc_y];
