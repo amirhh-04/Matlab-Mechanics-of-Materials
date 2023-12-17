@@ -2,6 +2,9 @@ clc; clear; close all;
 
 data = cell(1, 1);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%   Inputs Section    %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 nodeCount = input('Enter the number of nodes: ');
 data{1, 1}.nodes = zeros(nodeCount, 2);
 for i = 1:nodeCount
@@ -30,47 +33,27 @@ for i = 1:supportCount
     data{1, 1}.supports(i, :) = input(['Enter Data for supports (' e_l ') [nodeNumber type(1,2) orien(0,1,2)]: ']);
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%  Main Code Section  %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 data{1, 1}.element_lengths = zeros(elementCount, 1);
 data{1, 1}.element_angles = zeros(elementCount, 1);
 
-for i = 1:elementCount
-    n_1 = data{1, 1}.elements(i, 1);
-    n_2 = data{1, 1}.elements(i, 2);
-
-    x_1 = data{1, 1}.nodes(n_1, 1);
-    x_2 = data{1, 1}.nodes(n_2, 1);
-    delta_x = x_2 - x_1;
-
-    y_1 = data{1, 1}.nodes(n_1, 2);
-    y_2 = data{1, 1}.nodes(n_2, 2);
-    delta_y = y_2 - y_1;
-
-    data{1, 1}.element_lengths(i) = sqrt((delta_x^2) +(delta_y^2));
-    data{1, 1}.element_angles(i) = atan2(delta_y, delta_x);
-
-    area = data{1, 1}.elements(i, 3);
-    young_modulus = data{1, 1}.elements(i, 4);
-
-    s_i_n = sin(data{1, 1}.element_angles(i));
-    c_o_s = cos(data{1, 1}.element_angles(i));
-
-    delta_f_mat = [c_o_s^2 s_i_n*c_o_s -c_o_s^2 -s_i_n*c_o_s;s_i_n*c_o_s s_i_n^2 -s_i_n*c_o_s -s_i_n^2;-c_o_s^2 -s_i_n*c_o_s c_o_s^2 s_i_n*c_o_s;-s_i_n*c_o_s -s_i_n^2 s_i_n*c_o_s s_i_n^2];
-    k{i} = area * young_modulus / data{1, 1}.element_lengths(i) * delta_f_mat;
-end
-
 k_data = zeros(2 * nodeCount);
 k0_data = k_data;
-
 for i = 1:elementCount
-    n_1 = data{1, 1}.elements(i, 1);
-    n_2 = data{1, 1}.elements(i, 2);
+    [n_1, n_2] = getNodesByElement(i, data);
+    [element_lengths, element_angles, area, young_modulus, delta_f_mat] = getElementInformation(i, n_1, n_2, data);
+
+    data{1, 1}.element_lengths(i) = element_lengths;
+    data{1, 1}.element_angles(i) = element_angles;
+    k{i} = area * young_modulus / element_lengths * delta_f_mat;
+    [n_1, n_2] = getNodesByElement(i, data);
 
     k0_data(2*n_1-1:2*n_1, 2*n_1-1:2*n_1) = k{i} (1:2, 1:2);
     k0_data(2*n_1-1:2*n_1, 2*n_2-1:2*n_2) = k{i} (1:2, 3:4);
-
     k0_data(2*n_2-1:2*n_2, 2*n_1-1:2*n_1) = k{i} (3:4, 1:2);
     k0_data(2*n_2-1:2*n_2, 2*n_2-1:2*n_2) = k{i} (3:4, 3:4);
-
 
     k_data = k_data + k0_data;
     k0_data(:, :) = 0;
@@ -78,21 +61,13 @@ end
 
 force_0 = zeros(2*nodeCount, 1);
 for i = 1:forceNodesCount
-    force_node = data{1, 1}.forces(i, 1);
-    force_len = data{1, 1}.forces(i, 2);
-    force_angle = data{1, 1}.forces(i, 3) / 180 * pi;
-
-    fx = force_len * cos(force_angle);
-    fy = force_len * sin(force_angle);
-
+    [force_node, fx, fy] = getForceInfo(i, data);
     force_0(2*force_node-1:2*force_node, 1) = [fx; fy];
 end
 
 cnt = 0;
 for i = 1:supportCount
-    support_node = data{1, 1}.supports(i, 1);
-    support_type = data{1, 1}.supports(i, 2);
-    support_orien = data{1, 1}.supports(i, 3);
+    [support_node, support_type, support_orien] = getSupportInfo(i, data);
 
     if support_type == 1
         if support_orien == 1
@@ -110,31 +85,24 @@ end
 
 k_small_data = k_data;
 forces_data = force_0;
-
 k_small_data(:, uu_zero) = [];
 k_small_data(uu_zero, :) = [];
-
 forces_data(uu_zero, :) = [];
-
 u_all_data = (k_small_data^-1) * forces_data;
-
 uu_all = 1:2*nodeCount;
 uu_nonzero = uu_all;
 uu_nonzero(uu_zero) = [];
-
 u_data(uu_all, 1) = 0;
 u_data(uu_nonzero, 1) = u_all_data;
-
 force = k_data*u_data;
+
 element_res = cell(elementCount, 1);
 data{1, 1}.newNodesLoc = data{1, 1}.nodes;
-
 for i = 1:elementCount
     s_i_n = sin(data{1, 1}.element_angles(i));
     c_o_s = cos(data{1, 1}.element_angles(i));
 
-    n_1 = data{1, 1}.elements(i, 1);
-    n_2 = data{1, 1}.elements(i, 2);
+    [n_1, n_2] = getNodesByElement(i, data);
 
     delta = [-c_o_s -s_i_n c_o_s s_i_n] * [u_data(2*n_1-1); u_data(2*n_1); u_data(2*n_2-1); u_data(2*n_2)];
 
@@ -155,28 +123,18 @@ for i = 1:elementCount
     element_res{i, 1}.delta_len = delta;
     element_res{i, 1}.force = p;
     element_res{i, 1}.stress = p/area;
-end
 
-for i = 1:elementCount
-    el_data = element_res{i, 1};
-
-    node_first = data{1, 1}.elements(i, 1);
-    node_second = data{1, 1}.elements(i, 2);
-    yield_stress = data{1, 1}.elements(i, 5);
-    el_len = data{1, 1}.element_lengths(i);
-
-    delta_len = meterTomicroMetres(el_data.delta_len);
-    force = el_data.force;
-    stress = pascalsToMegapascals(el_data.stress);
-    strain = (el_len + el_data.delta_len) / el_len;
-    stress_utilisation = abs(el_data.stress / yield_stress) * 100;
+    [delta_len, force, stress, strain, stress_utilisation] = getResultByElement(i, data, element_res);
     element_res{i, 1}.stress_utilisation = stress_utilisation;
     element_res{i, 1}.strain = strain;
 
-    fprintf('\n -------------------- Element (%g) [n: %g,%g] --------------------\n   Delta L: %g (um) \n   Force: %g (N) \n   Stress: %g (MPa) \n   Strain: %g \n   Stress Utilisation: %g%%', i, node_first, node_second, delta_len, force, stress, strain, stress_utilisation);
+    fprintf('\n -------------------- Element (%g) [n: %g,%g] --------------------\n   Delta L: %g (um) \n   Force: %g (N) \n   Stress: %g (MPa) \n   Strain: %g \n   Stress Utilisation: %g%%', i, n_1, n_2, delta_len, force, stress, strain, stress_utilisation);
 end
 fprintf('\n');
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%   Figure Section    %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 nodes = data{1, 1}.nodes;
 new_nodes = data{1, 1}.newNodesLoc;
 elements = data{1, 1}.elements;
@@ -185,44 +143,23 @@ supports = data{1, 1}.supports;
 figure;
 scatter(nodes(:, 1), nodes(:, 2), 120, [0.8500 0.3250 0.0980], 'filled');
 hold on;
-
 for i = 1:elementCount
-    stress_utilisation = element_res{i, 1}.stress_utilisation;
-
-    node1 = elements(i, 1);
-    node2 = elements(i, 2);
-    
-    x1 = nodes(node1, 1);
-    y1 = nodes(node1, 2);
-    
-    x2 = nodes(node2, 1);
-    y2 = nodes(node2, 2);
-        
-    new_x1 = new_nodes(node1, 1);
-    new_y1 = new_nodes(node1, 2);
-    
-    new_x2 = new_nodes(node2, 1);
-    new_y2 = new_nodes(node2, 2);
-
+    [node1, node2] = getNodesByElement(i, data);    
+    [x1, y1] = getNodePos(node1, false, data);
+    [x2, y2] = getNodePos(node2, false, data);
+    [new_x1, new_y1] = getNodePos(node1, true, data);
+    [new_x2, new_y2] = getNodePos(node2, true, data);
+     
     broken = false;
-    if stress_utilisation > 100
-        color = [0.6350 0.0780 0.1840];
-        broken = true;
-    else
-        color = [0 0.4470 0.7410];
-    end
+    if element_res{i, 1}.stress_utilisation > 100; color = [0.6350 0.0780 0.1840]; broken = true; else; color = [0 0.4470 0.7410]; end;
     
     line([new_x1, new_x2], [new_y1, new_y2], 'Color', "magenta", 'LineWidth', 2);
     line([x1, x2], [y1, y2], 'Color', color, 'LineWidth', 3);
 end
 
 for i = 1:supportCount
-    node = supports(i, 1);
-    support_type = supports(i, 2);
-    support_orien = supports(i, 3);
-    
-    x = nodes(node, 1);
-    y = nodes(node, 2);
+    [node, support_type, support_orien] = getSupportInfo(i, data);
+    [x, y] = getNodePos(node, false, data);
     
     if support_type == 1
         color = 'b';
@@ -230,7 +167,6 @@ for i = 1:supportCount
         w = h * sqrt(2);
         x_points = [x-w/2, x, x+w/2];
         y_points = [y-h/2, y+h/2, y-h/2];
-        patch(x_points, y_points, color, 'EdgeColor', 'none');
     elseif support_type == 2
         if support_orien == 1
             color = 'y';
@@ -241,13 +177,79 @@ for i = 1:supportCount
         w = h * sqrt(2);
         x_points = [x-w/2, x, x+w/2];
         y_points = [y-h/2, y+h/2, y-h/2];
-        patch(x_points, y_points, color, 'EdgeColor', 'none');
     end
+
+    patch(x_points, y_points, color, 'EdgeColor', 'none');
 end
 
 title('STRUCTURE: ');
 grid on;
 axis equal;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%  Functions Section  %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function [delta_len, force, stress, strain, stress_utilisation] = getResultByElement(i, data, element_res)
+    el_data = element_res{i, 1};
+    yield_stress = data{1, 1}.elements(i, 5);
+    el_len = data{1, 1}.element_lengths(i);
+
+    delta_len = meterTomicroMetres(el_data.delta_len);
+    force = el_data.force;
+    stress = pascalsToMegapascals(el_data.stress);
+    strain = (el_len + el_data.delta_len) / el_len;
+    stress_utilisation = abs(el_data.stress / yield_stress) * 100;
+end
+
+function [support_node, support_type, support_orien] = getSupportInfo(i, data)
+    support_node = data{1, 1}.supports(i, 1);
+    support_type = data{1, 1}.supports(i, 2);
+    support_orien = data{1, 1}.supports(i, 3);
+end
+
+function [force_node, fx, fy] = getForceInfo(i, data)
+    force_node = data{1, 1}.forces(i, 1);
+    force_len = data{1, 1}.forces(i, 2);
+    force_angle = data{1, 1}.forces(i, 3) / 180 * pi;
+
+    fx = force_len * cos(force_angle);
+    fy = force_len * sin(force_angle);
+end
+
+function [element_lengths, element_angles, area, young_modulus, delta_f_mat] = getElementInformation(i, n_1, n_2, data)
+    [x_1, y_1] = getNodePos(n_1, false, data);
+    [x_2, y_2] = getNodePos(n_2, false, data);
+    delta_x = x_2 - x_1;
+    delta_y = y_2 - y_1;
+    
+    element_lengths = sqrt((delta_x^2) +(delta_y^2));
+    element_angles = atan2(delta_y, delta_x);
+    
+    area = data{1, 1}.elements(i, 3);
+    young_modulus = data{1, 1}.elements(i, 4);
+    
+    s_i_n = sin(element_angles);
+    c_o_s = cos(element_angles);
+
+    delta_f_mat = [c_o_s^2 s_i_n*c_o_s -c_o_s^2 -s_i_n*c_o_s;s_i_n*c_o_s s_i_n^2 -s_i_n*c_o_s -s_i_n^2;-c_o_s^2 -s_i_n*c_o_s c_o_s^2 s_i_n*c_o_s;-s_i_n*c_o_s -s_i_n^2 s_i_n*c_o_s s_i_n^2];
+end
+
+function [x_node, y_node] = getNodePos(node, newPos, data)
+    if newPos == true
+        new_nodes = data{1, 1}.newNodesLoc;
+        x_node = new_nodes(node, 1);
+        y_node = new_nodes(node, 2);
+        return
+    end
+    nodes = data{1, 1}.nodes;
+    x_node = nodes(node, 1);
+    y_node = nodes(node, 2);
+end
+
+function [node_1, node_2] = getNodesByElement(element, data)
+    node_1 = data{1, 1}.elements(element, 1);
+    node_2 = data{1, 1}.elements(element, 2);
+end
 
 function microMetres = meterTomicroMetres(meter)
     microMetres = meter * 1e6;
