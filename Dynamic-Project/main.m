@@ -128,7 +128,7 @@ for i = 1:elementCount
     element_res{i, 1}.stress_utilisation = stress_utilisation;
     element_res{i, 1}.strain = strain;
 
-    fprintf('\n -------------------- Element (%g) [n: %g,%g] --------------------\n   Delta L: %g (um) \n   Force: %g (N) \n   Stress: %g (MPa) \n   Strain: %g \n   Stress Utilisation: %g%%', i, n_1, n_2, delta_len, force, stress, strain, stress_utilisation);
+    fprintf('\n -------------------- Element (%g) [n: %g,%g] --------------------\n   Delta: %g (um) \n   Force: %g (N) \n   Stress: %g (MPa) \n   Strain: %g \n   Stress Utilisation: %g%%', i, n_1, n_2, delta_len, force, stress, strain, stress_utilisation);
 end
 fprintf('\n');
 
