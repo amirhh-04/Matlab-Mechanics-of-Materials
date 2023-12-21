@@ -5,26 +5,55 @@ data = cell(1, 1);
 %%%%%%%%%%%%%%%%%%%%%   Inputs Section    %%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [x y z]
-data{1, 1}.nodes = [0 0 -4
-                    -3 0 0
-                    0 0 4
-                    0 5 0];
+data{1, 1}.nodes = [1.5 0 2
+                    4.5 0 2
+                    0 0 0
+                    3 0 0
+                    6 0 0
+                    1.5 3 2
+                    4.5 3 2
+                    0 3 0
+                    3 3 0
+                    6 3 0];
 nodeCount = size(data{1, 1}.nodes, 1);
 
 % [node1 node2 A(m²) E(Pa) yieldStress(Pa)]
-data{1, 1}.elements = [1 4 0.0010 200e9 20e6
-                       2 4 0.002 200e9 20e6
-                       3 4 0.0020 200e9 20e6];
+data{1, 1}.elements = [1 2 0.0005 200e9 20e7
+                       1 3 0.0005 200e9 20e7
+                       1 4 0.0005 200e9 20e7
+                       2 4 0.0005 200e9 20e7
+                       2 5 0.0005 200e9 20e7
+                       3 4 0.0005 200e9 20e7
+                       4 5 0.0005 200e9 20e7
+                       6 7 0.0005 200e9 20e7
+                       6 8 0.0005 200e9 20e7
+                       6 9 0.0005 200e9 20e7
+                       7 9 0.0005 200e9 20e7
+                       7 10 0.0005 200e9 20e7
+                       8 9 0.0005 200e9 20e7
+                       9 10 0.0005 200e9 20e7
+                       3 8 0.0005 200e9 20e7
+                       1 6 0.0005 200e9 20e7
+                       4 9 0.0005 200e9 20e7
+                       2 7 0.0005 200e9 20e7
+                       5 10 0.0005 200e9 20e7
+                       4 8 0.0005 200e9 20e7
+                       4 10 0.0005 200e9 20e7
+                       1 7 0.0005 200e9 20e7];
 elementCount = size(data{1, 1}.elements, 1);
 
 % [nodeNumber F(N)-x F(N)-y F(N)-z]
-data{1, 1}.forces = [4 1200000 0 0];
+data{1, 1}.forces = [1 0 0 -25000
+                     2 0 0 -25000
+                     6 0 0 -25000
+                     7 0 0 -25000];
 forceNodesCount = size(data{1, 1}.forces, 1);
 
 % [nodeNumber Dx Dy Dz] (D => 0[free],1[close])
-data{1, 1}.supports = [1 1 1 1
-                       2 1 1 1
-                       3 1 1 1];
+data{1, 1}.supports = [3 1 1 1
+                       5 1 1 1
+                       8 1 1 1
+                       10 1 1 1];
 supportCount = size(data{1, 1}.supports, 1);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -87,13 +116,13 @@ force = k_data * u_data;
 element_res = cell(elementCount, 1);
 data{1, 1}.newNodesLoc = data{1, 1}.nodes;
 for i = 1:elementCount
-    Cx = cos(data{1, 1}.element_angles(i, 1)*pi/180);
-    Cy = cos(data{1, 1}.element_angles(i, 2)*pi/180);
-    Cz = cos(data{1, 1}.element_angles(i, 3)*pi/180);
+    c_o_s_x = cos(data{1, 1}.element_angles(i, 1)*pi/180);
+    c_o_s_y = cos(data{1, 1}.element_angles(i, 2)*pi/180);
+    c_o_s_z = cos(data{1, 1}.element_angles(i, 3)*pi/180);
 
     [n_1, n_2] = getNodesByElement(i, data);
 
-    delta = [-Cx -Cy -Cz Cx Cy Cz] * [u_data((3*n_1) - 2); u_data((3*n_1) - 1); u_data(3*n_1); u_data((3*n_2) - 2); u_data((3*n_2) - 1); u_data(3*n_2)];
+    delta = [-c_o_s_x -c_o_s_y -c_o_s_z c_o_s_x c_o_s_y c_o_s_z] * [u_data((3*n_1) - 2); u_data((3*n_1) - 1); u_data(3*n_1); u_data((3*n_2) - 2); u_data((3*n_2) - 1); u_data(3*n_2)];
 
     n1_new_loc_x = u_data((3 * n_1) - 2);
     n1_new_loc_y = u_data((3 * n_1) - 1);
@@ -147,6 +176,15 @@ for i = 1:elementCount
     
     plot3([new_x1, new_x2], [new_y1, new_y2], [new_z1, new_z2], 'Color', "magenta", 'LineWidth', 1);
     plot3([x1, x2], [y1, y2], [z1, z2], 'Color', color, 'LineWidth', 4);
+
+    text(x2, y2, z2+.23, sprintf('%d', node2), 'FontSize', 15, 'Color', "#279501");
+    text(x1, y1, z1+.23, sprintf('%d', node1), 'FontSize', 15, 'Color', "#279501");
+
+    mid_x = (x1 + x2) / 2;
+    mid_y = (y1 + y2) / 2;
+    mid_z = (z1 + z2) / 2;
+
+    text(mid_x, mid_y, mid_z, sprintf('%d', i), 'FontSize', 9, 'Color', "#FC0B8E");
 end
 
 for i = 1:supportCount
@@ -241,12 +279,12 @@ function [element_lengths, element_angles_x, element_angles_y, element_angles_z,
     young_modulus = data{1, 1}.elements(i, 4);
     
     x = element_angles_x * (pi/180);
-    u = element_angles_y * (pi/180);
-    v = element_angles_z * (pi/180);
-    Cx = cos(x);
-    Cy = cos(u);
-    Cz = cos(v);
-    delta_f_mat = [Cx*Cx Cx*Cy Cx*Cz ; Cy*Cx Cy*Cy Cy*Cz ; Cz*Cx Cz*Cy Cz*Cz];
+    y = element_angles_y * (pi/180);
+    z = element_angles_z * (pi/180);
+    c_o_s_x = cos(x);
+    c_o_s_y = cos(y);
+    c_o_s_z = cos(z);
+    delta_f_mat = [c_o_s_x*c_o_s_x c_o_s_x*c_o_s_y c_o_s_x*c_o_s_z ; c_o_s_y*c_o_s_x c_o_s_y*c_o_s_y c_o_s_y*c_o_s_z ; c_o_s_z*c_o_s_x c_o_s_z*c_o_s_y c_o_s_z*c_o_s_z];
 end
 
 function [x_node, y_node, z_node] = getNodePos(node, newPos, data)
