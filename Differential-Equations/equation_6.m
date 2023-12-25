@@ -1,11 +1,11 @@
-syms y(x);
-eqn = diff(y, x, x) - 5*diff(y, x) + 6*y == 0;
-dsolve(eqn)
+%%%%%%%%%%%%%%%%%%%%%% Equation 6 %%%%%%%%%%%%%%%%%%%%%%
+clc; clear; close all;
 
-syms y(x);
-eqn = diff(y, x, x, x) - 3*diff(y, x, x) + 3*diff(y, x) - y == 0;
-dsolve(eqn)
+syms x y(x);
 
-syms y(x);
-eqn = diff(y, x, x, x, x) - 2*diff(y, x, x) + y == 0;
-dsolve(eqn)
+d4y_dx4 = diff(y, x, 4); % d^4y/dx^4
+equation = d4y_dx4 == y; % y'''' == y
+
+res = dsolve(equation);
+
+fprintf('\n --------------------------------- \n  Result: %s \n --------------------------------- \n', res);
