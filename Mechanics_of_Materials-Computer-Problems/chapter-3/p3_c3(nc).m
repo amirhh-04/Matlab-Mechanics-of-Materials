@@ -1,4 +1,4 @@
-%%%%%%%%% P3-C5 %%%%%%%%%%
+%%%%%%%%% P3-C3 %%%%%%%%%%
 clc; clear;
 
 tElements = input("Total Elements : ");
