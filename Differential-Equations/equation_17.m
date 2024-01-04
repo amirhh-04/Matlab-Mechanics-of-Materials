@@ -1,4 +1,4 @@
-%%%%%%%%%%%%%%%%%%%%%% Equation 16 %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%% Equation 17 %%%%%%%%%%%%%%%%%%%%%%
 clc; clear; close all;
 
 syms t s x;
@@ -8,4 +8,3 @@ laplace_eq  = laplace(equation, t, s);
 simplify_res = simplify(laplace_eq);
 
 fprintf('\n --------------------------------- \n  Result: %s \n --------------------------------- \n', simplify_res);
-
