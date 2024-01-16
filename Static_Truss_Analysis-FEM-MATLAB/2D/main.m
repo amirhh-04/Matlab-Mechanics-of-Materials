@@ -5,33 +5,45 @@ data = cell(1, 1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%   Inputs Section    %%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-nodeCount = input('Enter the number of nodes: ');
-data{1, 1}.nodes = zeros(nodeCount, 2);
-for i = 1:nodeCount
-    e_l = num2str(i);
-    data{1, 1}.nodes(i, :) = input(['Enter coordinates for node (' e_l ') [x y]: ']);
-end
+% [x y z]
+data{1, 1}.nodes = [0 0
+                    3.8 9.12/7
+                    3.8 0
+                    7 2.4
+                    7 0
+                    10.2 9.12/7
+                    10.2 0
+                    14 0];
+nodeCount = size(data{1, 1}.nodes, 1);
 
-elementCount = input('Enter the number of elements: ');
-data{1, 1}.elements = zeros(elementCount, 5);
-for i = 1:elementCount
-    e_l = num2str(i);
-    data{1, 1}.elements(i, :) = input(['Enter Data for Element (' e_l ') [node1 node2 A(m²) E(Pa) yieldStress(Pa)]: ']);
-end
+% [node1 node2 A(m²) E(Pa) yieldStress(Pa)]
+data{1, 1}.elements = [1 2 0.0005 200e9 20e7
+                       1 3 0.0005 200e9 20e7
+                       2 3 0.0005 200e9 20e7
+                       2 4 0.0005 200e9 20e7
+                       3 4 0.0005 200e9 20e7
+                       3 5 0.0005 200e9 20e7
+                       4 5 0.0005 200e9 20e7
+                       4 7 0.0005 200e9 20e7
+                       4 6 0.0005 200e9 20e7
+                       6 7 0.0005 200e9 20e7
+                       6 8 0.0005 200e9 20e7
+                       5 7 0.0005 200e9 20e7
+                       7 8 0.0005 200e9 20e7];
+elementCount = size(data{1, 1}.elements, 1);
 
-forceNodesCount = input('Enter the number of nodes with forces: ');
-data{1, 1}.forces = zeros(forceNodesCount, 3);
-for i = 1:forceNodesCount
-    e_l = num2str(i);
-    data{1, 1}.forces(i, :) = input(['Enter Data for forces (' e_l ') [nodeNumber F(N) nodeAngle]: ']);
-end
+% [nodeNumber F(N) nodeAngle]
+data{1, 1}.forces = [1 5700 -90
+                     2 10500 -90
+                     4 9600 -90
+                     6 10500 -90
+                     8 5700 -90];
+forceNodesCount = size(data{1, 1}.forces, 1);
 
-supportCount = input('Enter the number of support: ');
-data{1, 1}.supports = zeros(supportCount, 3);
-for i = 1:supportCount
-    e_l = num2str(i);
-    data{1, 1}.supports(i, :) = input(['Enter Data for supports (' e_l ') [nodeNumber type(1,2) orien(0,1,2)]: ']);
-end
+% [nodeNumber type(1,2) orien(0,1,2)]
+data{1, 1}.supports = [1 2 0
+                       8 1 2];
+supportCount = size(data{1, 1}.supports, 1);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%  Main Code Section  %%%%%%%%%%%%%%%%%%%%%
@@ -128,6 +140,9 @@ for i = 1:elementCount
     element_res{i, 1}.stress_utilisation = stress_utilisation;
     element_res{i, 1}.strain = strain;
 
+    % Static Analys %
+    %fprintf('\n -------------------- Element (%g) [n: %g,%g] --------------------\n  Force: %g (N) \n', i, n_1, n_2, force);
+
     fprintf('\n -------------------- Element (%g) [n: %g,%g] --------------------\n   Delta: %g (um) \n   Force: %g (N) \n   Stress: %g (MPa) \n   Strain: %g \n   Stress Utilisation: %g%%', i, n_1, n_2, delta_len, force, stress, strain, stress_utilisation);
 end
 fprintf('\n');
@@ -155,6 +170,15 @@ for i = 1:elementCount
     
     line([new_x1, new_x2], [new_y1, new_y2], 'Color', "magenta", 'LineWidth', 2);
     line([x1, x2], [y1, y2], 'Color', color, 'LineWidth', 3);
+
+    
+    text(x2, y2, sprintf('%d', node2), 'FontSize', 15, 'Color', "#0BEED9");
+    text(x1, y1, sprintf('%d', node1), 'FontSize', 15, 'Color', "#0BEED9");
+
+    mid_x = (x1 + x2) / 2;
+    mid_y = (y1 + y2) / 2;
+
+    text(mid_x, mid_y, sprintf('%d', i), 'FontSize', 11, 'Color', "#000000");
 end
 
 for i = 1:supportCount
