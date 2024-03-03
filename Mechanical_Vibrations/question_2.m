@@ -10,7 +10,7 @@ plotODE(@getMyODE, [0.6350 0.0780 0.1840], [0, 10], 0);
 xlabel('time');
 ylabel('theta');
 title('Plot of the Curve');
-legend('#1', '#2');
+legend('θ(0) = π/6', 'θ(0) = 0');
 grid on;
 
 function odeData = getMyODE(t, q)
