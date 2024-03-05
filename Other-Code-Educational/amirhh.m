@@ -1657,15 +1657,16 @@
 % end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clc; clear; close all;
 
 figure;
+hold on;
 
 for a = 0:0.5:20
-    f = @(x, y) (sin(a*pi/10) + x).^2 + (cos(a*pi/10) + y).^2 - (1 + 0.7 * abs(x) * y);
+    f = @(x, y) (sin(a*pi/10) + x).^2 + (cos(a*pi/10) + y).^2 - (1 + 0.7 * abs(x) .* y);
 
-    fimplicit(f, [-3 3 -3 3], 'Color', 'red');
+    fimplicit(f, [-3 3 -3 3], 'Color', 'black');
     pause(0.5);
-    hold on;
 end
 
 
