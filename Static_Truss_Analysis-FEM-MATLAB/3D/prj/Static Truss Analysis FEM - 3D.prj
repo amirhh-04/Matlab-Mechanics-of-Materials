@@ -1,0 +1,77 @@
+<deployment-project plugin="plugin.webdeploy" plugin-version="1.0">
+  <configuration file="D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\prj\Static Truss Analysis FEM - 3D.prj" location="D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\prj" name="Static Truss Analysis FEM - 3D" target="target.webdeploy" target-name="Web App Compiler">
+    <param.appname>Static Truss Analysis FEM - 3D</param.appname>
+    <param.intermediate>${PROJECT_ROOT}\Static Truss Analysis FEM - 3D</param.intermediate>
+    <param.files.only>${PROJECT_ROOT}\Static Truss Analysis FEM - 3D</param.files.only>
+    <param.output />
+    <param.checkbox>false</param.checkbox>
+    <param.logdir>${PROJECT_ROOT}\Static Truss Analysis FEM - 3D</param.logdir>
+    <param.target.type>subtarget.web.app</param.target.type>
+    <param.user.defined.mcr.options />
+    <param.support.packages />
+    <unset>
+      <param.intermediate />
+      <param.files.only />
+      <param.output />
+      <param.checkbox />
+      <param.logdir />
+      <param.target.type />
+      <param.user.defined.mcr.options />
+      <param.support.packages />
+    </unset>
+    <fileset.web.main>
+      <file>D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\comp1.mlapp</file>
+    </fileset.web.main>
+    <fileset.resources />
+    <fileset.depfun />
+    <fileset.package />
+    <build-deliverables>
+      <file location="${PROJECT_ROOT}\Static Truss Analysis FEM - 3D" name="Static Truss Analysis FEM - 3D.ctf" optional="false">D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\prj\Static Truss Analysis FEM - 3D\Static Truss Analysis FEM - 3D.ctf</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2023b</root>
+      <toolboxes>
+        <toolbox name="matlabcoder" />
+        <toolbox name="gpucoder" />
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabhdlcoder" />
+      </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <gpucoder>
+          <enabled>true</enabled>
+        </gpucoder>
+      </toolbox>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

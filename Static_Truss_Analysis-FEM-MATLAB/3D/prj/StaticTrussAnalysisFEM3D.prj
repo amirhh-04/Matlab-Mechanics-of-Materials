@@ -1,0 +1,149 @@
+<deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
+  <configuration build-checksum="2236888185" file="D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\prj\StaticTrussAnalysisFEM3D.prj" location="D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\prj" name="StaticTrussAnalysisFEM3D" preferred-package-location="D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\prj\StaticTrussAnalysisFEM3D\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+    <param.appname>StaticTrussAnalysisFEM3D</param.appname>
+    <param.icon>${PROJECT_ROOT}\StaticTrussAnalysisFEM3D_resources\icon.ico</param.icon>
+    <param.icons>
+      <file>${PROJECT_ROOT}\StaticTrussAnalysisFEM3D_resources\icon_48.png</file>
+      <file>${PROJECT_ROOT}\StaticTrussAnalysisFEM3D_resources\icon_32.png</file>
+      <file>${PROJECT_ROOT}\StaticTrussAnalysisFEM3D_resources\icon_24.png</file>
+      <file>${PROJECT_ROOT}\StaticTrussAnalysisFEM3D_resources\icon_16.png</file>
+    </param.icons>
+    <param.version>1.3</param.version>
+    <param.authnamewatermark>Amirhossein Hassan</param.authnamewatermark>
+    <param.email>amirhhsony1383@gmail.com</param.email>
+    <param.company />
+    <param.summary>An interactive MATLAB app designed for 3D static truss analysis using the Finite Element Method (FEM). Ideal for educational purposes, it co</param.summary>
+    <param.description>Static Truss Analysis FEM - 3D is a MATLAB application meticulously crafted to facilitate the analysis of three-dimensional truss structures through the Finite Element Method (FEM). Tailored for educational use, this application is a fusion of concepts from statics, material mechanics, and structural analysis, making it an invaluable tool for students and professionals alike.
+
+With an intuitive user interface, the app allows users to input nodal coordinates, connectivity information, supports, and applied loads. Utilizing FEM principles, it generates a finite element model of the truss, computes displacements, stresses, and strains, and visually presents the results in a comprehensive manner.
+
+Key Features:
+
+Interactive interface for defining truss geometry, supports, and loads.
+Automated generation of finite element models based on user input.
+Visualization of deformed truss configurations under applied loads.
+Identification of failed elements and display of stress and strain distributions.
+Detailed analysis results including nodal displacements, element forces, and failure percentages.</param.description>
+    <param.screenshot />
+    <param.guid />
+    <param.installpath.string>\StaticTrussAnalysisFEM3D\</param.installpath.string>
+    <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
+    <param.logo />
+    <param.install.notes />
+    <param.target.install.notes />
+    <param.intermediate>${PROJECT_ROOT}\StaticTrussAnalysisFEM3D\for_testing</param.intermediate>
+    <param.files.only>${PROJECT_ROOT}\StaticTrussAnalysisFEM3D\for_redistribution_files_only</param.files.only>
+    <param.output>${PROJECT_ROOT}\StaticTrussAnalysisFEM3D\for_redistribution</param.output>
+    <param.logdir>${PROJECT_ROOT}\StaticTrussAnalysisFEM3D</param.logdir>
+    <param.enable.clean.build>false</param.enable.clean.build>
+    <param.user.defined.mcr.options />
+    <param.target.type>subtarget.standalone</param.target.type>
+    <param.support.packages />
+    <param.web.mcr>true</param.web.mcr>
+    <param.package.mcr>false</param.package.mcr>
+    <param.no.mcr>false</param.no.mcr>
+    <param.web.mcr.name>MyAppInstaller_web</param.web.mcr.name>
+    <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
+    <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
+    <param.windows.command.prompt>true</param.windows.command.prompt>
+    <param.create.log>false</param.create.log>
+    <param.log.file />
+    <param.native.matlab>false</param.native.matlab>
+    <param.checkbox>false</param.checkbox>
+    <param.example />
+    <param.help.text>Syntax 
+	  -? 
+	 
+ Input Arguments 
+	 -?  print help on how to use the application 
+	 input arguments</param.help.text>
+    <unset>
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.screenshot />
+      <param.guid />
+      <param.installpath.string />
+      <param.installpath.combo />
+      <param.logo />
+      <param.install.notes />
+      <param.target.install.notes />
+      <param.intermediate />
+      <param.files.only />
+      <param.output />
+      <param.logdir />
+      <param.enable.clean.build />
+      <param.user.defined.mcr.options />
+      <param.target.type />
+      <param.support.packages />
+      <param.web.mcr />
+      <param.package.mcr />
+      <param.no.mcr />
+      <param.web.mcr.name />
+      <param.package.mcr.name />
+      <param.no.mcr.name />
+      <param.windows.command.prompt />
+      <param.create.log />
+      <param.log.file />
+      <param.native.matlab />
+      <param.checkbox />
+      <param.example />
+    </unset>
+    <fileset.main>
+      <file>D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\fem.mlapp</file>
+    </fileset.main>
+    <fileset.resources />
+    <fileset.package />
+    <fileset.depfun />
+    <build-deliverables>
+      <file location="${PROJECT_ROOT}\StaticTrussAnalysisFEM3D\for_testing" name="readme.txt" optional="true">D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\prj\StaticTrussAnalysisFEM3D\for_testing\readme.txt</file>
+      <file location="${PROJECT_ROOT}\StaticTrussAnalysisFEM3D\for_testing" name="splash.png" optional="false">D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\prj\StaticTrussAnalysisFEM3D\for_testing\splash.png</file>
+      <file location="${PROJECT_ROOT}\StaticTrussAnalysisFEM3D\for_testing" name="StaticTrussAnalysisFEM3D.exe" optional="false">D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\prj\StaticTrussAnalysisFEM3D\for_testing\StaticTrussAnalysisFEM3D.exe</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2023b</root>
+      <toolboxes>
+        <toolbox name="matlabcoder" />
+        <toolbox name="gpucoder" />
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabhdlcoder" />
+      </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <gpucoder>
+          <enabled>true</enabled>
+        </gpucoder>
+      </toolbox>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

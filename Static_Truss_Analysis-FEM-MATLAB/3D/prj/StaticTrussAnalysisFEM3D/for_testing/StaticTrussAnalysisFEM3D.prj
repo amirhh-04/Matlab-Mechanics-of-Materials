@@ -1,0 +1,95 @@
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration build-checksum="3971848072" file="D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\prj\StaticTrussAnalysisFEM3D\for_testing\StaticTrussAnalysisFEM3D.prj" location="D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\prj\StaticTrussAnalysisFEM3D\for_testing" name="StaticTrussAnalysisFEM3D" target="target.mlapps" target-name="Package App">
+    <param.appname>StaticTrussAnalysisFEM3D</param.appname>
+    <param.authnamewatermark>amirhossein Hassan</param.authnamewatermark>
+    <param.email>amirhhsony1383@gmail.com</param.email>
+    <param.company />
+    <param.icon />
+    <param.icons />
+    <param.summary>An interactive MATLAB app designed for 3D static truss analysis using the Finite Element Method (FEM). Ideal for educational purposes.</param.summary>
+    <param.description>Static Truss Analysis FEM - 3D is a MATLAB application meticulously crafted to facilitate the analysis of three-dimensional truss structures through the Finite Element Method (FEM). Tailored for educational use, this application is a fusion of concepts from statics, material mechanics, and structural analysis, making it an invaluable tool for students and professionals alike.
+
+With an intuitive user interface, the app allows users to input nodal coordinates, connectivity information, supports, and applied loads. Utilizing FEM principles, it generates a finite element model of the truss, computes displacements, stresses, and strains, and visually presents the results in a comprehensive manner.
+
+Key Features:
+Interactive interface for defining truss geometry, supports, and loads.
+Automated generation of finite element models based on user input.
+Visualization of deformed truss configurations under applied loads.
+Identification of failed elements and display of stress and strain distributions.
+Detailed analysis results including nodal displacements, element forces, and failure percentages.</param.description>
+    <param.screenshot />
+    <param.version>1.0</param.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
+    <param.platforms />
+    <param.output>${PROJECT_ROOT}</param.output>
+    <param.guid>89f94d9e-b0d2-4b37-a86f-a0159b6fbcfb</param.guid>
+    <unset>
+      <param.company />
+      <param.icon />
+      <param.icons />
+      <param.screenshot />
+      <param.version />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
+      <param.platforms />
+      <param.output />
+    </unset>
+    <fileset.main>
+      <file>D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\fem.mlapp</file>
+    </fileset.main>
+    <fileset.depfun />
+    <fileset.resources />
+    <fileset.package />
+    <build-deliverables>
+      <file location="D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\prj\StaticTrussAnalysisFEM3D" name="for_testing" optional="false">D:\SRB-U\MultiDisciplinary-Matlab-Engineering-Codes\Static_Truss_Analysis-FEM-MATLAB\3D\prj\StaticTrussAnalysisFEM3D\for_testing</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2023b</root>
+      <toolboxes>
+        <toolbox name="matlabcoder" />
+        <toolbox name="gpucoder" />
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabhdlcoder" />
+      </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <gpucoder>
+          <enabled>true</enabled>
+        </gpucoder>
+      </toolbox>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

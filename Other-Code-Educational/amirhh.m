@@ -1656,18 +1656,64 @@
 %    plot(x, y, 'black');
 % end
 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% clc; clear; close all;
+% 
+% figure;
+% hold on;
+% 
+% for a = 0:0.5:20
+%     f = @(x, y) (sin(a*pi/10) + x).^2 + (cos(a*pi/10) + y).^2 - (1 + 0.7 * abs(x) .* y);
+% 
+%     fimplicit(f, [-3 3 -3 3], 'Color', 'black');
+%     pause(0.5);
+% end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-clc; clear; close all;
+% clc; clear; close all;
+% 
+% a = 2.6;
+% 
+% f1 = @(x) x.^(2/3) + exp(1)/3*(pi-x.^2).^(1/2) .* sin(a*pi*x);
+% x1 = linspace(0, 2, 1000);
+% y1 = f1(x1);
+% 
+% 
+% f2 = @(x) x.^(2/3) + exp(1)/3*(pi-x.^2).^(1/2) .* sin(-a*pi*x);
+% x2 = linspace(-2, 0, 1000);
+% y2 = f2(-x2);
+% 
+% 
+% hold on;
+% plot(x1, y1, 'red');
+% plot(x2, y2, 'red');
+
+
+% %% erteashat - eshtebah
+% omega_n = 3.13;
+% t = 0:0.1:5;
+% theta = @(t) 3.63 * sin(omega_n * t) + 0.1 * cos(omega_n * t) - 0.07 * sin(2 * pi * t);
+% theta_values = theta(t);
+% 
+% figure;
+% plot(t, theta_values, 'LineWidth', 1.5);
+% xlabel('Time (s)');
+% ylabel('\theta(t)');
+% title('Response of the System: \theta(t) vs. Time');
+% grid on;
+
+clc;
+clear;
+close all;
+
+y = @(t) exp(-t/2) .* ( (14/39) * sqrt(3) .* sin(sqrt(3)/2 * t) + (2/13) * cos(sqrt(3)/2 * t) ) - (3/13) * sin(2*t) - (2/13) * cos(2*t);
+t = linspace(0, 20, 1000);
+yt = y(t);
 
 figure;
-hold on;
+plot(t, yt, 'LineWidth', 2);
+grid on;
 
-for a = 0:0.5:20
-    f = @(x, y) (sin(a*pi/10) + x).^2 + (cos(a*pi/10) + y).^2 - (1 + 0.7 * abs(x) .* y);
-
-    fimplicit(f, [-3 3 -3 3], 'Color', 'black');
-    pause(0.5);
-end
 
 
 
