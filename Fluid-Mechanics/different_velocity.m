@@ -13,7 +13,7 @@ hold on;
 
 for i = 1:vValues_len
     velocity = velocity_values(i);
-    prof_u = velocity * (y + 0.2) / (plateDistance / 2);
+    prof_u = velocity * (y + 0.2) / (plateDistance);
     plot(prof_u, y, 'Color', colors(i, :), 'LineWidth', 2, 'DisplayName', sprintf('$V = %d \\frac{m}{sec}$', velocity));
 end
 
