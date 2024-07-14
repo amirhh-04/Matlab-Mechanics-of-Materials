@@ -13,8 +13,8 @@ v = km_h_To_m_s(v_m_s);    % Speed of the car (m/s)
 I = 3000;                  % Moment of inertia (kg.m^2)
 
 % Trapezoidal bump parameters
-a = 1;                           % Larger base (m)
-b_bump = 0.5;                    % Smaller base (m)
+a = 2;                           % Larger base (m)
+b_bump = 1;                      % Smaller base (m)
 c = 0.1;                         % Height (m)
 start_distance = 5;              % Distance from the car's front wheel to the bump start (m)
 start_time = start_distance / v; % Time when the front wheel hits the bump
@@ -23,15 +23,15 @@ start_time = start_distance / v; % Time when the front wheel hits the bump
 t = 0:0.01:5;
 
 % Road bump input function for front and rear wheels
-y_front = @(t) (t > start_time & t < start_time+a/v) .* (c/a) .* (v*t - start_time*v) + ...
-               (t >= start_time+a/v & t < start_time+(a+b_bump)/v) .* c + ...
-               (t >= start_time+(a+b_bump)/v & t < start_time+2*a/v) .* (-c/a) .* (v*t - (start_time+(a+b_bump)/v)) + ...
-               (t >= start_time+2*a/v) * 0;
+y_front = @(t) (t > start_time & t < start_time+(a-b_bump)/(2*v)) .* (2*c/(a-b_bump)) .* (v*t - start_time*v) + ...
+               (t >= start_time+(a-b_bump)/(2*v) & t < start_time+(a+b_bump)/(2*v)) .* c + ...
+               (t >= start_time+(a+b_bump)/(2*v) & t < start_time+a/v) .* (-2*c/(a-b_bump)) .* (v*t - (start_time+(a+b_bump)/(2*v))) + ...
+               (t >= start_time+a/v) * 0;
 
-y_rear = @(t) (t > start_time+d/v & t < start_time+(a+d)/v) .* (c/a) .* (v*(t - d/v - start_time)) + ...
-               (t >= start_time+(a+d)/v & t < start_time+(a+b_bump+d)/v) .* c + ...
-               (t >= start_time+(a+b_bump+d)/v & t < start_time+(2*a+d)/v) .* (-c/a) .* (v*(t - d/v - start_time) - (a+b_bump)/v) + ...
-               (t >= start_time+(2*a+d)/v) * 0;
+y_rear = @(t) (t > start_time+d/v & t < start_time+(a-b_bump)/(2*v)+d/v) .* (2*c/(a-b_bump)) .* (v*(t - d/v - start_time)) + ...
+               (t >= start_time+(a-b_bump)/(2*v)+d/v & t < start_time+(a+b_bump)/(2*v)+d/v) .* c + ...
+               (t >= start_time+(a+b_bump)/(2*v)+d/v & t < start_time+a/v+d/v) .* (-2*c/(a-b_bump)) .* (v*(t - d/v - start_time) - (a+b_bump)/(2*v)) + ...
+               (t >= start_time+a/v+d/v) * 0;
 
 % ODE system
 ode = @(t, X) [X(2);
@@ -80,6 +80,11 @@ car = patch([-car_length/2, car_length/2, car_length/2, -car_length/2], ...
 front_wheel = plot(0, 0, 'ko', 'MarkerSize', 10, 'MarkerFaceColor', 'k'); % Front wheel
 rear_wheel = plot(0, 0, 'ko', 'MarkerSize', 10, 'MarkerFaceColor', 'k'); % Rear wheel
 
+% Draw road bump
+bump_x = [start_distance, start_distance + (a-b_bump)/2, start_distance + (a+b_bump)/2, start_distance + a];
+bump_y = [0, c, c, 0];
+fill(bump_x, bump_y, 'g');
+
 for i = 1:length(T)
     % Car position and angle
     x_pos = v * T(i);
@@ -105,11 +110,6 @@ for i = 1:length(T)
     rear_wheel_pos = R * [-b; 0] + [x_pos; y_pos];
     set(front_wheel, 'XData', front_wheel_pos(1), 'YData', front_wheel_pos(2));
     set(rear_wheel, 'XData', rear_wheel_pos(1), 'YData', rear_wheel_pos(2));
-    
-    % Draw road bump
-    bump_x = [start_distance, start_distance + a, start_distance + a + b_bump, start_distance + 2*a];
-    bump_y = [0, c, c, 0];
-    fill(bump_x, bump_y, 'g');
     
     % Update plot
     drawnow;
