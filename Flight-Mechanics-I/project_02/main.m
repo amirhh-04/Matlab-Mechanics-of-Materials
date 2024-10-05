@@ -1,0 +1,46 @@
+clc,clear,close all
+%
+h=0:500:25000;
+T_0=288.15;
+l=0.0065;
+p_0=101325;
+g=9.807;
+R=287.3;
+rho_0=1.225;
+%
+for i=1:numel(h)
+    if h(i) <= 11000
+        T(i)=T_0-(l*h(i));
+        p(i)=p_0*(T(i)/T_0)^5.256;
+        rho(i)=rho_0*(T(i)/T_0)^4.256;
+        k=i;
+    else
+        T(i)=T(k);
+        p(i)=p(k)*exp(-g/(R*T(k))*(h(i)-h(k)));
+        rho(i)=rho(k)*exp(-g/(R*T(k))*(h(i)-h(k)));
+    end
+    theta(i)=T(i)/T_0;
+    delta(i)=p(i)/p_0;
+    sigma(i)=rho(i)/rho_0;
+end
+%
+figure(1)
+subplot(2,2,1)
+plot(T,h,'r')
+ylabel('h')
+xlabel('T')
+title('h-T')
+subplot(2,2,2)
+plot(p,h,'b')
+ylabel('h')
+xlabel('p')
+title('h-p')
+subplot(2,2,3:4)
+plot(rho,h,'m')
+ylabel('h')
+xlabel('\rho')
+title('h-\rho')
+figure(2)
+plot(h,theta,h,delta,h,sigma)
+xlabel('h')
+legend('\theta','\delta','\sigma')
