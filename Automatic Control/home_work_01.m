@@ -30,17 +30,13 @@
 clc; clear; close all;
 
 omega = sqrt(3)/2;
-t = linspace(0, 20, 100);
-x_t = -1 + t + exp(-0.5 * t) .* ( (2 * sqrt(3))/3 .* sin(omega * t - 2*pi/3) );
-bb = (sin(omega * t));
-cc = exp(-0.5 * t);
+t = linspace(0, 20, 1000);
+
+% x_t = -1 + t + exp(-0.5 * t) .* ((2 * sqrt(3)) / 3 .* sin(omega * t - ((2*pi)/3)));
+x_t = exp(-0.5 * t) .* (cos(omega * t) - (1/sqrt(3)) * sin(omega * t)) + (t - 1);
 
 figure;
 hold on;
-% plot(t, t, 'g--', 'LineWidth', 1);
-% plot(t, bb, 'b.', 'LineWidth', 1);
-% plot(t, cc, 'm.', 'LineWidth', 1);
-% plot(t, -1, 'm.-', 'LineWidth', 1);
 plot(t, x_t, 'LineWidth', 2);
 xlabel('t');
 ylabel('x(t)');
