@@ -1,4 +1,4 @@
-اclc; clear; close all;
+clc; clear; close all;
 
 % --- Pitot Tube Data ---
 l_0 = [125, 145, 165, 185, 205, 225, 245, 265, 285]; % Pitot tube location along the tube (mm)
