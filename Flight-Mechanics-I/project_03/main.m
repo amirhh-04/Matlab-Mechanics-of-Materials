@@ -1,31 +1,65 @@
-% مشخصات هواپیما
-W = 333400 * 9.81;  % وزن (N)
-S = 511;  % مساحت بال (m^2)
-CL_max = 1.5;  % ضریب لیفت ماکسیمم
-rho0 = 1.225;  % چگالی هوا در سطح دریا (kg/m^3)
-g = 9.81;  % شتاب گرانش (m/s^2)
+clc; clear; close all;
 
-% ارتفاعات مورد نظر (0 تا 15 کیلومتر)
-h = linspace(0, 15000, 100);  % ارتفاع‌ها (m)
-rho = rho0 .* (1 - 0.0065 .* h / 288.15).^(4.2561);  % چگالی هوا در ارتفاع
+% Parameters for Boeing 747-200
+h_max = 13700; % Maximum ceiling altitude in meters == 44948.82 feet
+rho_0 = 1.225; % Air density at sea level (kg/m^3)
+g = 9.81; % Gravity acceleration (m/s^2) == 32.174 ft/s^2
+W = 288837.92 * g; % Maximum Takeoff Weight (N) == 8.17e6 lbf
+S = 511; % Wing surface area (m^2) == 5500 ft^2
+CL_max = 1.5; % Maximum lift coefficient for stall
 
-% سرعت استال (Stall Speed) برای ارتفاعات مختلف
-V_stall = sqrt((2 * W) ./ (rho * S * CL_max));
+% Altitude and density variations
+altitudes_m = linspace(0, h_max, 100); % Altitude range from 0 to ceiling (in meters) == (0 to 44948.82 ft)
+altitudes_km = altitudes_m / 1000; % Convert altitudes to kilometers
+rho = rho_0 .* (1 - 0.0000226 * altitudes_m).^4.2561; % Air density vs. altitude
 
-% سرعت ماکسیمم (Max Speed) - فرض کنید سرعت ماکسیمم در سطح دریا 250 m/s است
-V_max_sea_level = 250;  % (m/s)
-V_max = V_max_sea_level .* sqrt(rho / rho0);  % کاهش سرعت ماکسیمم با ارتفاع
+% Stall speed vs altitude
+V_stall = sqrt(2 * W ./ (rho * S * CL_max)); % Stall speed at different altitudes in m/s
 
-% رسم نمودار
+% Plotting
 figure;
-plot(V_stall, h / 1000, 'r', 'LineWidth', 2);  % منحنی استال
 hold on;
-plot(V_max, h / 1000, 'b', 'LineWidth', 2);  % منحنی سرعت ماکسیمم
-hold off;
 
-% تنظیمات نمودار
-xlabel('سرعت (m/s)');
-ylabel('ارتفاع (km)');
-title('Flight Envelope (h-V Diagram) for B747-200');
-legend('Stall Speed', 'Maximum Speed');
+% Plot stall speed
+plot(V_stall, altitudes_km, 'r-', 'LineWidth', 2);
+text(V_stall(1), 0, 'Stall Speed', 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right', 'Color', 'r');
+
+% Plot maximum altitude (Ceiling)
+plot([0, max(V_stall) + 250], [h_max/1000, h_max/1000], 'k--', 'LineWidth', 2);
+text(max(V_stall), h_max/1000, 'Ceiling', 'VerticalAlignment', 'top', 'HorizontalAlignment', 'left', 'Color', 'k');
+
+% Constant Mach Lines (e.g., Mach 0.6, 0.7, 0.8)
+Mach_numbers = [0.9];
+for M = Mach_numbers
+    V_mach = zeros(size(altitudes_m)); % Initialize Mach speed array
+    
+    for i = 1:length(altitudes_m)
+        if altitudes_m(i) <= 11000
+            % Up to 11 km: Use temperature lapse rate in the troposphere
+            T = 288.15 - 0.0065 * altitudes_m(i); % Temperature decreases with altitude
+            a = sqrt(1.4 * 287 * T); % Speed of sound using temperature
+        else
+            % Above 11 km: Temperature is constant at -56.5°C (216.65 K)
+            a = sqrt(1.4 * 287 * 216.65); % Speed of sound constant above 11 km
+        end
+        V_mach(i) = M * a; % Mach speed at each altitude
+    end
+    
+    % Plot Mach lines
+    plot(V_mach, altitudes_km, '-', 'LineWidth', 1.5, 'Color', [0.4940, 0.1840, 0.5560]);
+    text(V_mach(1), 0, sprintf('Const Mach %.1f', M), 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right', 'Color', [0.4940, 0.1840, 0.5560]);
+end
+
+% Constant EAS Lines (Equivalent Airspeed)
+EAS_values = [200]; % Example EAS values in m/s
+for EAS = EAS_values
+    V_EAS = EAS ./ sqrt(rho ./ rho_0);
+    plot(V_EAS, altitudes_km, '-.', 'LineWidth', 1.5, 'Color', 'blue');
+    text(V_EAS(1), 0, sprintf('Const EAS %.0f m/s', EAS), 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right', 'Color', 'blue');
+end
+
+xlabel('True Airspeed (m/s)');
+ylabel('Altitude (km)');
+title('Flight Envelope (h-V diagram) for Boeing 747-200');
 grid on;
+hold off;
