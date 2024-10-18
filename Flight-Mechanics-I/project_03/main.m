@@ -4,7 +4,7 @@ clc; clear; close all;
 h_max = 13700; % Maximum ceiling altitude in meters == 44948.82 feet
 rho_0 = 1.225; % Air density at sea level (kg/m^3)
 g = 9.81; % Gravity acceleration (m/s^2) == 32.174 ft/s^2
-W = 288837.92 * g; % Maximum Takeoff Weight (N) == 8.17e6 lbf
+W = 377842.444 * g; % Maximum Takeoff Weight (N) == 8.17e6 lbf
 S = 511; % Wing surface area (m^2) == 5500 ft^2
 CL_max = 1.5; % Maximum lift coefficient for stall
 
@@ -28,7 +28,7 @@ text(V_stall(1), 0, 'Stall Speed', 'VerticalAlignment', 'bottom', 'HorizontalAli
 plot([0, max(V_stall) + 250], [h_max/1000, h_max/1000], 'k--', 'LineWidth', 2);
 text(max(V_stall), h_max/1000, 'Ceiling', 'VerticalAlignment', 'top', 'HorizontalAlignment', 'left', 'Color', 'k');
 
-% Constant Mach Lines (e.g., Mach 0.6, 0.7, 0.8)
+% Constant Mach Lines
 Mach_numbers = [0.9];
 for M = Mach_numbers
     V_mach = zeros(size(altitudes_m)); % Initialize Mach speed array
@@ -52,10 +52,10 @@ end
 
 % Constant EAS Lines (Equivalent Airspeed)
 EAS_values = [200]; % Example EAS values in m/s
-for EAS = EAS_values
-    V_EAS = EAS ./ sqrt(rho ./ rho_0);
-    plot(V_EAS, altitudes_km, '-.', 'LineWidth', 1.5, 'Color', 'blue');
-    text(V_EAS(1), 0, sprintf('Const EAS %.0f m/s', EAS), 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right', 'Color', 'blue');
+for V_EAS = EAS_values
+    V_TAS = V_EAS ./ sqrt(rho ./ rho_0);
+    plot(V_TAS, altitudes_km, '-.', 'LineWidth', 1.5, 'Color', 'blue');
+    text(V_TAS(1), 0, sprintf('Const EAS %.0f m/s', V_EAS), 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right', 'Color', 'blue');
 end
 
 xlabel('True Airspeed (m/s)');
