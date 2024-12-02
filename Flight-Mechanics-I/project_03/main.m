@@ -6,7 +6,12 @@ rho_0 = 1.225; % Air density at sea level (kg/m^3)
 g = 9.81; % Gravity acceleration (m/s^2) == 32.174 ft/s^2
 W = 377842.444 * g; % Maximum Takeoff Weight (N) == 8.17e6 lbf
 S = 511; % Wing surface area (m^2) == 5500 ft^2
-CL_max = 1.5; % Maximum lift coefficient for stall
+
+alpha = 16 * (pi / 180);
+C_D_0 = 0.0751;
+C_L_0 = 0.92;
+C_L_alpha = 5.67;
+CL_max = C_L_0 + (C_L_alpha * alpha); % Maximum lift coefficient for stall
 
 % Altitude and density variations
 altitudes_m = linspace(0, h_max, 100); % Altitude range from 0 to ceiling (in meters) == (0 to 44948.82 ft)
