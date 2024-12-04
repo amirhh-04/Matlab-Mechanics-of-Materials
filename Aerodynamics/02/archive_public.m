@@ -9,8 +9,8 @@ gamma_vals = [0, 100, 150, 200]; % Circulation values (Γ)
 R = sqrt(kappa / (2 * pi * v_inf));  % Equivalent cylinder radius
 
 % Grid setup
-x_range = linspace(-3, 3, 250); % X-coordinates
-y_range = linspace(-3, 3, 250); % Y-coordinates
+x_range = linspace(-5, 5, 250); % X-coordinates
+y_range = linspace(-5, 5, 250); % Y-coordinates
 [x, y] = meshgrid(x_range, y_range);
 
 % Calculations
@@ -29,7 +29,7 @@ for index = 1:length(gamma_vals)
 
     % Plot streamlines
     subplot(1, length(gamma_vals), index);
-    contour(x, y, psiTotal, 50, 'LineWidth', 1.2); % Streamlines
+    contour(x, y, psiTotal, 70, 'LineWidth', 1.1); % Streamlines
     hold on;
 
     % Add title and labels
