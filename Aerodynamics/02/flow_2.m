@@ -34,7 +34,10 @@ for index = 1:Lambda_len
     [m, c] = contour(x, y, psi_total, 30);
     c.LineWidth = 1; c.Color = [0, 0.75, 0.75];
 
-    plot(x_stagnation, y_stagnation, 'ro', 'MarkerSize', 5, 'MarkerFaceColor', 'red');
+    if ~isempty(x_stagnation) && ~isempty(y_stagnation)
+        p = plot(x_stagnation, y_stagnation);
+        p.Marker = 'o'; p.MarkerSize = 4; p.MarkerFaceColor = 'red';
+    end
 
     title(['$\Lambda = ' num2str(lambda) '\, \frac{\mathrm{m}^2}{\mathrm{s}}$'], 'Interpreter', 'latex');
     xlabel('X-axis'); ylabel('Y-axis');

@@ -36,8 +36,10 @@ for index = 1:gamma_len
     [m, c] = contour(x, y, psi_total, 30);
     c.LineWidth = 1; c.Color = [0, 0.75, 0.75];
 
-    p = plot(x_stagnation, y_stagnation, 'ro');
-    p.MarkerSize = 4; p.MarkerFaceColor = 'red';
+    if ~isempty(x_stagnation) && ~isempty(y_stagnation)
+        p = plot(x_stagnation, y_stagnation, 'ro');
+        p.Marker = 'o'; p.MarkerSize = 4; p.MarkerFaceColor = 'red';
+    end
 
     title(['$\Gamma = ' num2str(gamma) '\, \frac{\mathrm{m}^2}{\mathrm{s}}$'], 'Interpreter', 'latex');
     xlabel('X-axis'); ylabel('Y-axis');
