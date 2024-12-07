@@ -15,6 +15,7 @@ gamma_len = length(gamma_vals);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% Plot Streamlines & Velocity Fields %%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure('Name', 'Uniform, Doublet & Vortex Flow', 'NumberTitle', 'off');
+tiledlayout(1,4);
 
 for index = 1:gamma_len
     gamma = gamma_vals(index);
@@ -27,7 +28,7 @@ for index = 1:gamma_len
     [x_stagnation, y_stagnation] = pol2cart(theta_stagnation, r_stagnation);
     [x, y] = pol2cart(theta_mesh, r_mesh);
 
-    subplot(1, 4, index);
+    nexttile;
 
     quiver(x, y, u, v, 'b');
 
