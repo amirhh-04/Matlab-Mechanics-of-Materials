@@ -23,7 +23,7 @@ disp(stable_a);
 
 % رسم نمودار
 figure;
-plot(a_values, zeros(size(a_values)), 'k--'); % خط مبنا
+plot(a_values, zeros(size(a_values)), 'k--'); % خط مبنا=
 hold on;
 plot(stable_a, zeros(size(stable_a)), 'go', 'MarkerSize', 8, 'LineWidth', 2); % مقادیر پایدار
 grid on;

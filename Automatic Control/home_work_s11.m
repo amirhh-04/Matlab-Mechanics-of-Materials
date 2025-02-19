@@ -15,7 +15,7 @@ plot([-5 5], [0 0], 'k--');
 plot([0 0], [-5 5], 'k--');
 grid on;
 
-title('Pole Locations in the Complex Plane');
+title('Pole Locations');
 xlabel('Real Axis');
 ylabel('Imaginary Axis');
 xlim([-5 5]);

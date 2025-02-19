@@ -5,6 +5,8 @@
 
 This repository serves as a comprehensive hub for various engineering computational problems, featuring MATLAB solutions and educational content. It is organized into four main directories:
 
+Note: (nc) == Not completed :)
+
 ---
 
 # 1. Mechanics of Materials - Computer Problems
